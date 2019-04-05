@@ -9,7 +9,7 @@ DataStream::DataStream() {
 }
 
 DataStream::~DataStream() {
-
+    close();
 }
 
 bool DataStream::open(QString filename, uint32_t flags) {

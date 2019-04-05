@@ -1,10 +1,10 @@
 #ifndef TYRISTMANUALDATABASE_H
 #define TYRISTMANUALDATABASE_H
 
-#include "tyristmanual.h"
 #include <QMap>
 #include <QVector>
 
+#include "tyristmanual.h"
 
 class tyristManualDataBase
 {
@@ -13,6 +13,7 @@ class tyristManualDataBase
 		bool moding;
 	public:
 		tyristManualDataBase();
+        ~tyristManualDataBase();
 		int count() const;
         id_type append(tyristManual record);
 		void remove(id_type id);

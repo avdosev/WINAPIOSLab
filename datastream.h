@@ -35,7 +35,6 @@ class DataStream
 
 };
 
-
 DataStream& operator << (DataStream&, QChar);
 DataStream& operator << (DataStream&, QString);
 

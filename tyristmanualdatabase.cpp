@@ -1,12 +1,23 @@
 #include "tyristmanualdatabase.h"
+
 #include <QMapIterator>
 #include <QFile>
+#include <QDir>
 #include <QDebug>
-#include <QDataStream>
+
+#include "datastream.h"
 
 tyristManualDataBase::tyristManualDataBase()
 {
     moding = false;
+}
+
+tyristManualDataBase::~tyristManualDataBase()
+{
+    QString dir = QDir::currentPath() + "\\database.db";
+    if (!save(dir)) {
+        qDebug() << "не успешное завершение базы данных";
+    }
 }
 
 int tyristManualDataBase::count() const {
@@ -51,20 +62,25 @@ QVector<tyristManual> tyristManualDataBase::records() {
 }
 
 bool tyristManualDataBase::save(QString filename) {
-    QFile *file = new QFile(filename);
-    if(!file->open(QIODevice::WriteOnly)) return false; // если файл не открылся
-    QDataStream stream(file);
+    DataStream stream;
+    if (stream.open(filename, DataStream::out | DataStream::trunc)) {
+        qDebug() << "файл успешно был создан";
+    } else {
+        qDebug() << "не предвиденная ошибка";
+        qDebug() << "файл:" << filename << "не сохранен";
+        return false;
+    }
 	QMapIterator<id_type, tyristManual> it (data);
 	while (it.hasNext()) {
 		tyristManual tmp = it.next().value();
-		stream << tmp.get_restType() << "\n";
-		stream << tmp.get_country() << "\n";
-		stream << tmp.get_restPlace() << "\n";
-		stream << tmp.get_cost() << "\n";
-		stream << tmp.get_duration() << "\n";
+        stream << tmp.get_restType();
+        stream << tmp.get_country();
+        stream << tmp.get_restPlace();
+        stream << tmp.get_cost();
+        stream << tmp.get_duration();
 		stream << tmp.get_visa();
-		if (it.hasNext()) stream << "\n";
 	}
+
 	moding = false;
     return true;
 }
@@ -74,9 +90,8 @@ bool tyristManualDataBase::load(QString filename) {
     if(!file->open(QIODevice::ReadOnly)) {
 		return false; // если файл не открылся
 	}
-    QDataStream stream(file);
+    /*QDataStream stream(file);
 	while (!stream.atEnd()) {//от не пригодилось
-		moding = true;
 		tyristManual tmp_tyrist;
 		QString tmp_str;
 		int tmp_int;
@@ -93,7 +108,7 @@ bool tyristManualDataBase::load(QString filename) {
 		stream >> tmp_int;
 		tmp_tyrist.set_visa(tmp_int);
 		append(tmp_tyrist);
-	}
+    }*/
 	return true;
 }
 
