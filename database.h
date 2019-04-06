@@ -6,20 +6,20 @@
 
 #include "tyristmanual.h"
 
-class tyristManualDataBase
+class DataBase
 {
 	private:
-		QMap <id_type, tyristManual> data;
+        QMap <id_type, TyristManual> data;
 		bool moding;
 	public:
-		tyristManualDataBase();
-        ~tyristManualDataBase();
+        DataBase();
+        ~DataBase();
 		int count() const;
-        id_type append(tyristManual record);
+        id_type append(TyristManual record);
 		void remove(id_type id);
-        void update(id_type record_id, tyristManual record);
-        tyristManual record(id_type id) const;
-        QVector<tyristManual> records();
+        void update(id_type record_id, TyristManual record);
+        TyristManual record(id_type id) const;
+        QVector<TyristManual> records();
         bool save(QString filename);
 		bool load(QString filename);
 		void clear();

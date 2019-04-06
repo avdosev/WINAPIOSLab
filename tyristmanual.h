@@ -6,7 +6,7 @@
 
 using id_type = unsigned int;
 
-class tyristManual {
+class TyristManual {
 	private:
 		static QStringList listRestTypes;
 		static QStringList listCountry;
@@ -19,9 +19,9 @@ class tyristManual {
 
 	public:
 		id_type id;
-		tyristManual();
-		tyristManual(const tyristManual& c);
-		~tyristManual();
+		TyristManual();
+		TyristManual(const TyristManual& c);
+		~TyristManual();
 
         int get_restType() const ;
         int get_country() const ;
@@ -30,12 +30,12 @@ class tyristManual {
         int get_duration() const ;
 		int get_visa() const ;
 
-		static int compare(const tyristManual & comp1, const tyristManual & comp2);
-		static tyristManual createRandomObject();
+		static int compare(const TyristManual & comp1, const TyristManual & comp2);
+		static TyristManual createRandomObject();
 		static const QStringList& getListRestTypes();
 		static const QStringList& getListCountry();
 
-		tyristManual& operator = (const tyristManual& c);
+		TyristManual& operator = (const TyristManual& c);
 
 		operator QString() const;
 		QString toQString() const;
@@ -48,10 +48,10 @@ class tyristManual {
 		void set_visa(bool t);
 };
 
-bool operator >  (const tyristManual& c1, const tyristManual& c2);
-bool operator >= (const tyristManual& c1, const tyristManual& c2);
-bool operator <  (const tyristManual& c1, const tyristManual& c2);
-bool operator <= (const tyristManual& c1, const tyristManual& c2);
-bool operator == (const tyristManual& c1, const tyristManual& c2);
-bool operator != (const tyristManual& c1, const tyristManual& c2);
+bool operator >  (const TyristManual& c1, const TyristManual& c2);
+bool operator >= (const TyristManual& c1, const TyristManual& c2);
+bool operator <  (const TyristManual& c1, const TyristManual& c2);
+bool operator <= (const TyristManual& c1, const TyristManual& c2);
+bool operator == (const TyristManual& c1, const TyristManual& c2);
+bool operator != (const TyristManual& c1, const TyristManual& c2);
 #endif // TYRISTMANUAL_H

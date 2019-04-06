@@ -1,4 +1,4 @@
-#include "tyristmanualdatabase.h"
+#include "database.h"
 
 #include <QMapIterator>
 #include <QFile>
@@ -7,22 +7,27 @@
 
 #include "datastream.h"
 
-tyristManualDataBase::tyristManualDataBase()
+static const QString nameFileDataBase = "database.db";
+
+DataBase::DataBase()
 {
     moding = false;
+
+    QString dir = QDir::currentPath() + "\\" + nameFileDataBase;
+    load(dir);
 }
 
-tyristManualDataBase::~tyristManualDataBase()
+DataBase::~DataBase()
 {
-    QString dir = QDir::currentPath() + "\\database.db";
+    QString dir = QDir::currentPath() + "\\" + nameFileDataBase;
     save(dir);
 }
 
-int tyristManualDataBase::count() const {
+int DataBase::count() const {
 	return data.size();
 }
 
-id_type tyristManualDataBase::append(tyristManual record) {
+id_type DataBase::append(TyristManual record) {
 	moding = true;
     id_type temp_id = getUniqueId();
     data.insert(temp_id, record);
@@ -30,36 +35,35 @@ id_type tyristManualDataBase::append(tyristManual record) {
     return temp_id;
 }
 
-void tyristManualDataBase::remove(id_type id) {
+void DataBase::remove(id_type id) {
 	data.remove(id);
     moding = true;
 }
 
-void tyristManualDataBase::update(id_type record_id, tyristManual record) {
+void DataBase::update(id_type record_id, TyristManual record) {
     moding = true;
     record.id = record_id;
     data[record_id] = record;
 
 }
 
-tyristManual tyristManualDataBase::record(id_type id) const {
+TyristManual DataBase::record(id_type id) const {
 	if(data.contains(id))
 		return data[id];
     //если нет такого айди то кидаем исключение
     throw std::runtime_error("запись с нужным id отсутствует");
 }
 
-QVector<tyristManual> tyristManualDataBase::records() {
-	QMapIterator<id_type, tyristManual> it (data);
-	QVector <tyristManual> res;
+QVector<TyristManual> DataBase::records() {
+    QMapIterator<id_type, TyristManual> it (data);
+    QVector <TyristManual> res;
 	while (it.hasNext()) {
 		res.push_back(it.next().value());
 	}
-	//qSort(res);
 	return res;
 }
 
-bool tyristManualDataBase::save(QString filename) {
+bool DataBase::save(QString filename) {
     DataStream stream;
     if (stream.open(filename, DataStream::out | DataStream::trunc)) {
         qDebug() << "файл успешно был создан";
@@ -68,9 +72,13 @@ bool tyristManualDataBase::save(QString filename) {
         qDebug() << "файл:" << filename << "не создан";
         return false;
     }
-	QMapIterator<id_type, tyristManual> it (data);
+
+    // сначала закидываем размер
+    // потом все элементы контейнера
+    //stream << data.size(); //а что если нет
+    QMapIterator<id_type, TyristManual> it (data);
 	while (it.hasNext()) {
-		tyristManual tmp = it.next().value();
+        TyristManual tmp = it.next().value();
         stream << tmp.get_restType();
         stream << tmp.get_country();
         stream << tmp.get_restPlace();
@@ -83,14 +91,14 @@ bool tyristManualDataBase::save(QString filename) {
     return true;
 }
 
-bool tyristManualDataBase::load(QString filename) {
-	QFile *file = new QFile(filename);
-    if(!file->open(QIODevice::ReadOnly)) {
+bool DataBase::load(QString filename) {
+    DataStream stream;
+    if(!stream.open(filename, DataStream::in)) {
+        qDebug() << "файл:" << filename << " не открылся";
 		return false; // если файл не открылся
 	}
-    /*QDataStream stream(file);
-	while (!stream.atEnd()) {//от не пригодилось
-		tyristManual tmp_tyrist;
+    while (!stream.eof()) {
+        TyristManual tmp_tyrist;
 		QString tmp_str;
 		int tmp_int;
 		stream >> tmp_int;
@@ -106,29 +114,29 @@ bool tyristManualDataBase::load(QString filename) {
 		stream >> tmp_int;
 		tmp_tyrist.set_visa(tmp_int);
 		append(tmp_tyrist);
-    }*/
+    }
 	return true;
 }
 
-void tyristManualDataBase::clear() {
+void DataBase::clear() {
 	data.clear();
 	moding = true;
 }
 
-bool tyristManualDataBase::isModidfied() const {
+bool DataBase::isModidfied() const {
 	return moding;
 }
 
 
-bool tyristManualDataBase::isUniqueId(id_type id) const {
+bool DataBase::isUniqueId(id_type id) const {
     if (id == 0) return false;
     return !data.contains(id);
 }
 
-id_type tyristManualDataBase::getUniqueId() const {
-	id_type id = qrand();
+id_type DataBase::getUniqueId() const {
+    id_type id = static_cast<id_type>(qrand());
     while (!isUniqueId(id)) {
-		id = qrand();
+        id = static_cast<id_type>(qrand());
 	}
 	return id;
 }

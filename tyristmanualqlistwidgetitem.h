@@ -2,14 +2,14 @@
 #define TYRISTMANUALQLISTWIDGETITEM_H
 
 #include <QListWidgetItem>
-#include <tyristmanualdatabase.h>
+#include <database.h>
 
 class tyristManualQListWidgetItem : public QListWidgetItem//хоп а кто ето тут наследуется
 {
 		unsigned int id;
-		tyristManualDataBase* d;
+		DataBase* d;
 	public:
-        tyristManualQListWidgetItem(unsigned int _id, tyristManualDataBase* _d) {
+        tyristManualQListWidgetItem(unsigned int _id, DataBase* _d) {
             id = _id;
             d = _d;
             update_text();
@@ -19,7 +19,7 @@ class tyristManualQListWidgetItem : public QListWidgetItem//хоп а кто е�
 			return id;
 		}
 
-		tyristManual get_record() {
+		TyristManual get_record() {
 			return d->record(id);
 		}
 

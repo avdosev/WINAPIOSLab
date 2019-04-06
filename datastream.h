@@ -30,18 +30,25 @@ class DataStream
         bool is_open();
         void close();
         bool eof();
-        Size_t write(void* begin, Size_t size);
-        Size_t read(void* begin, Size_t size);
+        bool write(void* begin, Size_t size);
+        bool read(void* begin, Size_t size);
 
 };
 
 DataStream& operator << (DataStream&, QChar);
 DataStream& operator << (DataStream&, QString);
+DataStream& operator >> (DataStream&, QChar&);
+DataStream& operator >> (DataStream&, QString&);
 
 template <typename num_t>
 DataStream& operator << (DataStream& stream, num_t value) {
-    qDebug() << "num_t operator " << value << sizeof(num_t);
     stream.write(&value, sizeof(value));
+    return stream;
+}
+
+template <typename num_t>
+DataStream& operator >> (DataStream& stream, num_t& value) {
+    stream.read(&value, sizeof(value));
     return stream;
 }
 

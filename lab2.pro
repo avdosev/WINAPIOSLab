@@ -28,16 +28,16 @@ SOURCES += \
     tyristmanual.cpp \
     main.cpp \
     mestootduxavalidator.cpp \
-    tyristmanualdatabase.cpp \
-    datastream.cpp
+    datastream.cpp \
+    database.cpp
 
 HEADERS += \
         mainwindow.h \
     tyristmanual.h \
     mestootduxavalidator.h \
-    tyristmanualdatabase.h \
     tyristmanualqlistwidgetitem.h \
-    datastream.h
+    datastream.h \
+    database.h
 
 FORMS += \
         mainwindow.ui

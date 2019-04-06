@@ -32,7 +32,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-    qInstallMessageHandler(myMessageOutput);
+    //qInstallMessageHandler(myMessageOutput);
 	MainWindow w;
 	w.show();
     qsrand( QTime::currentTime().msec() );

@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "tyristmanual.h"
-#include "tyristmanualdatabase.h"
+#include "database.h"
 #include "tyristmanualqlistwidgetitem.h"
 
 namespace Ui {
@@ -17,16 +17,16 @@ class MainWindow : public QMainWindow
 	public:
         explicit MainWindow(QWidget *parent = nullptr);
 
-        tyristManual getDataFromUi();
-		void loadDataToUi(const tyristManual & import);
+        TyristManual getDataFromUi();
+		void loadDataToUi(const TyristManual & import);
 
 		void updateBrowserRecords();
 
 		bool hasAcceptableInput();
 
-        void addRecord(const tyristManual&);
+        void addRecord(const TyristManual&);
 
-        id_type addRecordToDatabase(const tyristManual & import);
+        id_type addRecordToDatabase(const TyristManual & import);
 
 		void addRecordToUi(id_type id);
 
@@ -52,7 +52,7 @@ class MainWindow : public QMainWindow
 
 	private:
 		Ui::MainWindow *ui;
-		tyristManualDataBase records;
+		DataBase records;
 };
 
 #endif // MAINWINDOW_H

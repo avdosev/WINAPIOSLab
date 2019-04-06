@@ -16,11 +16,20 @@ ui(new Ui::MainWindow)
 
 	setWindowTitle(tr("Туристический справочник"));
     ui->mestoOtduxaStr->setValidator(new mestoOtduxaValidator(this));
-    ui->type_otdux->addItems(tyristManual::getListRestTypes());
-    ui->strana->addItems(tyristManual::getListCountry());
+    ui->type_otdux->addItems(TyristManual::getListRestTypes());
+    ui->strana->addItems(TyristManual::getListCountry());
 
 	//делаем все кнопки активными
-	loadDataToUi(tyristManual());
+	loadDataToUi(TyristManual());
+
+    //если внутри что то есть то загружаем
+    QVector <TyristManual> temp_vector = records.records();
+    QVectorIterator <TyristManual> it(temp_vector);
+    while (it.hasNext()) {
+        id_type id = it.next().id;
+        addRecordToUi(id);
+    }
+    updateBrowserRecords();
 }
 
 MainWindow::~MainWindow()
@@ -28,7 +37,7 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
-void MainWindow::loadDataToUi(const tyristManual & import) {
+void MainWindow::loadDataToUi(const TyristManual & import) {
 	ui->Visa_mastercard->setChecked(import.get_visa());
     ui->day->setValue(import.get_duration());
     ui->pay->setValue(import.get_cost());
@@ -37,8 +46,8 @@ void MainWindow::loadDataToUi(const tyristManual & import) {
     ui->type_otdux->setCurrentRow(import.get_restType());
 }
 
-tyristManual MainWindow::getDataFromUi() {
-	tyristManual temp;
+TyristManual MainWindow::getDataFromUi() {
+	TyristManual temp;
 
     temp.set_cost(ui->pay->value());
     temp.set_duration(ui->day->value());
@@ -63,12 +72,12 @@ bool MainWindow::hasAcceptableInput() {
 }
 
 //добавляекм запись и базу данных и в ui
-void MainWindow::addRecord(const tyristManual& value) {
+void MainWindow::addRecord(const TyristManual& value) {
     auto id = addRecordToDatabase(value);
     addRecordToUi(id);
 }
 
-id_type MainWindow::addRecordToDatabase(const tyristManual & import) {
+id_type MainWindow::addRecordToDatabase(const TyristManual & import) {
 	id_type t = records.append(import);
     return t;
 }
@@ -99,7 +108,7 @@ void MainWindow::on_save_clicked()
 void MainWindow::on_create_clicked()
 {
 	//if (hasAcceptableInput()) {
-    addRecord(tyristManual());
+    addRecord(TyristManual());
 	updateBrowserRecords();
 	//}
 }
@@ -120,7 +129,7 @@ void MainWindow::on_otmena_clicked()
     if (currentItem != nullptr)
 		loadDataToUi(records.record(currentItem->get_id()));
 	else
-		loadDataToUi(tyristManual());
+		loadDataToUi(TyristManual());
 }
 
 void MainWindow::on_strana_currentRowChanged(int currentRow)
@@ -133,7 +142,7 @@ void MainWindow::on_strana_currentRowChanged(int currentRow)
 void MainWindow::on_fill_clicked()
 {
 	for (int i = 0; i < 10; i++) {
-        addRecord(tyristManual::createRandomObject());
+        addRecord(TyristManual::createRandomObject());
 	}
 	updateBrowserRecords();
 }
@@ -147,7 +156,7 @@ void MainWindow::on_browserRecord_currentItemChanged()
 		loadDataToUi(records.record(idCurrentRecord));
 	}
 	else {
-		loadDataToUi(tyristManual());
+		loadDataToUi(TyristManual());
 	}
 }
 
