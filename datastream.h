@@ -1,5 +1,4 @@
-#ifndef WINDATASTREAM_H
-#define WINDATASTREAM_H
+#pragma once
 
 #include <QString>
 #include <QDebug>
@@ -20,8 +19,9 @@ class DataStream
             in = 1,             // открыть для чтения
             out = 2,            // отрыть для записи
             ate = 4,            // при открытии переместить указатель в конец файла
-            app = in | ate,     // открыть файл для записи в конец файла
-            trunc = 8           // удалить содержимое файла, если он существует
+            app = out | ate,    // открыть файл для записи в конец файла
+            create = 8,         // создать новый файл
+            trunc = 16          // удалить содержимое файла, если он существует
         };
 
         DataStream();
@@ -45,4 +45,4 @@ DataStream& operator << (DataStream& stream, num_t value) {
     return stream;
 }
 
-#endif // WINDATASTREAM_H
+//#endif // WINDATASTREAM_H

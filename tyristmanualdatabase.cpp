@@ -15,9 +15,7 @@ tyristManualDataBase::tyristManualDataBase()
 tyristManualDataBase::~tyristManualDataBase()
 {
     QString dir = QDir::currentPath() + "\\database.db";
-    if (!save(dir)) {
-        qDebug() << "не успешное завершение базы данных";
-    }
+    save(dir);
 }
 
 int tyristManualDataBase::count() const {
@@ -67,7 +65,7 @@ bool tyristManualDataBase::save(QString filename) {
         qDebug() << "файл успешно был создан";
     } else {
         qDebug() << "не предвиденная ошибка";
-        qDebug() << "файл:" << filename << "не сохранен";
+        qDebug() << "файл:" << filename << "не создан";
         return false;
     }
 	QMapIterator<id_type, tyristManual> it (data);

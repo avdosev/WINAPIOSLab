@@ -17,13 +17,20 @@ bool DataStream::open(QString filename, uint32_t flags) {
             CreationDisposition = 0, // как открывать
             FileAttribute = 0; // атрибут файла - константа
     uint32_t bitflags = flags;
-    if (bitflags & io::in)  DesiredAccess |= GENERIC_WRITE;
-    if (bitflags & io::out) DesiredAccess |= GENERIC_READ;
-
-    if (bitflags & io::trunc) CreationDisposition |= CREATE_ALWAYS;
-    else CreationDisposition |= OPEN_EXISTING;
-
     FileAttribute = FILE_ATTRIBUTE_NORMAL;
+    if (bitflags & io::in)  DesiredAccess |= GENERIC_READ;
+    if (bitflags & io::out) DesiredAccess |= GENERIC_WRITE;
+
+    if (bitflags & io::create) {
+        CreationDisposition |= CREATE_ALWAYS;
+    } else {
+        CreationDisposition |= OPEN_ALWAYS;
+    }
+
+    if (bitflags & io::trunc) {
+        open(filename, io::create); // создаем файл в любом случае после чего идем по плану
+        close();
+    }
 
     file = CreateFileA(filename.toStdString().c_str(),
                        DesiredAccess,
@@ -32,19 +39,28 @@ bool DataStream::open(QString filename, uint32_t flags) {
                        CreationDisposition,
                        FileAttribute,
                        NULL);
+
     bool fileOpen = file != INVALID_HANDLE_VALUE;
 
-    if (bitflags & io::ate && fileOpen) SetFilePointer(file,0,NULL,FILE_END);
+    if (!fileOpen) {
+        qDebug() << "Ошибка при открытии файла: " << filename;
+    } else {
+        qDebug() << "Файл: " << filename << " успешно открыт";
+    }
+
+    if ((bitflags & io::ate) && fileOpen) SetFilePointer(file,0,NULL,FILE_END);
 
     return fileOpen;
 }
 
 bool DataStream::is_open() {
-    return file != INVALID_HANDLE_VALUE;
+    return file != INVALID_HANDLE_VALUE && file != NULL;
 }
 
 void DataStream::close() {
+    qDebug() << "закрытие потока";
     CloseHandle(file);
+    file = NULL;
 }
 
 bool DataStream::eof() {
