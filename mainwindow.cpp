@@ -1,5 +1,3 @@
-//"чувак это лаба по оп сделаная за пару часов за день-несколько до сдачи, успокойся"
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "mestootduxavalidator.h"
@@ -27,7 +25,7 @@ ui(new Ui::MainWindow)
     QVectorIterator <TyristManual> it(temp_vector);
     while (it.hasNext()) {
         id_type id = it.next().id;
-        addRecordToUi(id);
+        addRecordToUi(id, false);
     }
     updateBrowserRecords();
 }
@@ -72,9 +70,9 @@ bool MainWindow::hasAcceptableInput() {
 }
 
 //добавляекм запись и базу данных и в ui
-void MainWindow::addRecord(const TyristManual& value) {
+void MainWindow::addRecord(const TyristManual& value, bool setCurrent) {
     auto id = addRecordToDatabase(value);
-    addRecordToUi(id);
+    addRecordToUi(id, setCurrent);
 }
 
 id_type MainWindow::addRecordToDatabase(const TyristManual & import) {
@@ -82,10 +80,10 @@ id_type MainWindow::addRecordToDatabase(const TyristManual & import) {
     return t;
 }
 
-void MainWindow::addRecordToUi(id_type id) {
+void MainWindow::addRecordToUi(id_type id, bool setCurrent) {
 	tyristManualQListWidgetItem* temp = new tyristManualQListWidgetItem(id, &records);
 	ui->browserRecord->addItem(temp);
-	ui->browserRecord->setCurrentItem(temp);
+    if (setCurrent) ui->browserRecord->setCurrentItem(temp);
 }
 
 void MainWindow::on_save_clicked()
@@ -141,8 +139,8 @@ void MainWindow::on_strana_currentRowChanged(int currentRow)
 
 void MainWindow::on_fill_clicked()
 {
-	for (int i = 0; i < 10; i++) {
-        addRecord(TyristManual::createRandomObject());
+    for (int i = 0; i < 15; i++) {
+        addRecord(TyristManual::createRandomObject(), false);
 	}
 	updateBrowserRecords();
 }
@@ -161,9 +159,17 @@ void MainWindow::on_browserRecord_currentItemChanged()
 }
 
 tyristManualQListWidgetItem* MainWindow::getCurrentItem() {
-    //ну шо кастуем
-    //к концу лабы буду чувствовать себя магом
+    // ну шо кастуем
+    // к концу лабы буду чувствовать себя магом
+
+    // я был молод и глуп
+    // настоящая магия это вин апи
     return static_cast<tyristManualQListWidgetItem*>(ui->browserRecord->currentItem());
 }
 
 
+
+void MainWindow::on_removeAllBtn_clicked() {
+    records.clear();
+    ui->browserRecord->clear();
+}

@@ -75,7 +75,7 @@ bool DataBase::save(QString filename) {
 
     // сначала закидываем размер
     // потом все элементы контейнера
-    //stream << data.size(); //а что если нет
+    stream << data.size();
     QMapIterator<id_type, TyristManual> it (data);
 	while (it.hasNext()) {
         TyristManual tmp = it.next().value();
@@ -97,7 +97,10 @@ bool DataBase::load(QString filename) {
         qDebug() << "файл:" << filename << " не открылся";
 		return false; // если файл не открылся
 	}
-    while (!stream.eof()) {
+    int size;
+    stream >> size;
+    for (int i = 0; i < size; i++) {
+    //while (!stream.eof()) { // не работает
         TyristManual tmp_tyrist;
 		QString tmp_str;
 		int tmp_int;

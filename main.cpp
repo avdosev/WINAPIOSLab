@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "datastream.h"
+
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     static FILE* messageFile = fopen("logs.txt", "w");
@@ -32,9 +34,9 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-    //qInstallMessageHandler(myMessageOutput);
-	MainWindow w;
-	w.show();
+    qInstallMessageHandler(myMessageOutput);
+    MainWindow w;
+    w.show();
     qsrand( QTime::currentTime().msec() );
 	return a.exec();
 }

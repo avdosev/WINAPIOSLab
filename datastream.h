@@ -12,7 +12,7 @@ class DataStream
 {
     private:
         HANDLE file;
-        OFSTRUCT infoFile;
+        //OFSTRUCT infoFile;
         bool endFile;
     public:
         enum io {

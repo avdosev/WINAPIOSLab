@@ -5,7 +5,7 @@
 
 DataStream::DataStream() {
     file = NULL;
-    memset(&infoFile, 0, sizeof(infoFile));
+    //memset(&infoFile, 0, sizeof(infoFile));
 }
 
 DataStream::~DataStream() {
@@ -13,6 +13,7 @@ DataStream::~DataStream() {
 }
 
 bool DataStream::open(QString filename, uint32_t flags) {
+    if (file != NULL) close();
     DWORD DesiredAccess = 0, // в режим чтения/запись
             CreationDisposition = 0, // как открывать
             FileAttribute = 0; // атрибут файла - константа
@@ -64,14 +65,8 @@ void DataStream::close() {
 }
 
 bool DataStream::eof() {
-    char buf[3];
-    bool rd = read(buf, 1);
-    if (rd) {
-        DWORD dwPtrLow = SetFilePointer(file, -1, NULL,FILE_CURRENT);
-        if (dwPtrLow == INVALID_SET_FILE_POINTER) {
-            qDebug() << "ошибка при определении конца файла";
-        }
-    }
+    bool rd;
+    rd = true;
     return !rd;
 }
 

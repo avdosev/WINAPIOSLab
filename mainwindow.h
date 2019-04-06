@@ -24,11 +24,11 @@ class MainWindow : public QMainWindow
 
 		bool hasAcceptableInput();
 
-        void addRecord(const TyristManual&);
+        void addRecord(const TyristManual&, bool setCurrent = true);
 
         id_type addRecordToDatabase(const TyristManual & import);
 
-		void addRecordToUi(id_type id);
+        void addRecordToUi(id_type id, bool setCurrent = true);
 
         tyristManualQListWidgetItem* getCurrentItem();
 
@@ -50,7 +50,9 @@ class MainWindow : public QMainWindow
 
         void on_browserRecord_currentItemChanged();
 
-	private:
+        void on_removeAllBtn_clicked();
+
+    private:
 		Ui::MainWindow *ui;
 		DataBase records;
 };

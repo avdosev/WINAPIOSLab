@@ -298,6 +298,13 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="fill">
+          <property name="text">
+           <string>заполнить</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="delet">
           <property name="text">
            <string>удалить</string>
@@ -305,9 +312,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="fill">
+         <widget class="QPushButton" name="removeAllBtn">
           <property name="text">
-           <string>заполнить</string>
+           <string>удалить все</string>
           </property>
          </widget>
         </item>
