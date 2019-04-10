@@ -3,6 +3,8 @@
 
 #include <tyristmanual.h>
 
+#include <QVector>
+
 class DataBasePrototype
 {
     public:

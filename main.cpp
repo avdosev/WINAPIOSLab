@@ -37,9 +37,11 @@ int main(int argc, char *argv[])
 
     qInstallMessageHandler(myMessageOutput);// устанавливаем обработку qdebug в логфайл
 
-    //DataBase dataBase;
-    MainWindow w;
+    auto controller = DataBaseController(new DataBase());//создаем вне класса ui
+
+    MainWindow w(controller);
     w.show();
+
     qsrand( QTime::currentTime().msec() );
 	return a.exec();
 }

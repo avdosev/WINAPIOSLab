@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "tyristmanual.h"
-#include "database.h"
+#include "databasecontroller.h"
 #include "tyristmanualqlistwidgetitem.h"
 
 namespace Ui {
@@ -15,7 +15,7 @@ class MainWindow : public QMainWindow
 		Q_OBJECT
 
 	public:
-        explicit MainWindow(QWidget *parent = nullptr);
+        explicit MainWindow(DataBaseController controller, QWidget *parent = nullptr);
 
         TyristManual getDataFromUi();
 		void loadDataToUi(const TyristManual & import);
@@ -54,7 +54,7 @@ class MainWindow : public QMainWindow
 
     private:
 		Ui::MainWindow *ui;
-		DataBase records;
+        DataBaseController records;
 };
 
 #endif // MAINWINDOW_H

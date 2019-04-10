@@ -2,7 +2,6 @@
 #define TYRISTMANUALDATABASE_H
 
 #include <QMap>
-#include <QVector>
 
 #include "databaseprototype.h"
 
