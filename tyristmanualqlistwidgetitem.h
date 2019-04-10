@@ -2,14 +2,14 @@
 #define TYRISTMANUALQLISTWIDGETITEM_H
 
 #include <QListWidgetItem>
-#include <database.h>
+#include <databaseprototype.h>
 
 class tyristManualQListWidgetItem : public QListWidgetItem//хоп а кто ето тут наследуется
 {
 		unsigned int id;
-		DataBase* d;
+        DataBasePrototype* d;
 	public:
-        tyristManualQListWidgetItem(unsigned int _id, DataBase* _d) {
+        tyristManualQListWidgetItem(unsigned int _id, DataBasePrototype* _d) {
             id = _id;
             d = _d;
             update_text();

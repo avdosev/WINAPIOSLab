@@ -8,7 +8,7 @@
 class mestoOtduxaValidator : public QValidator
 {
     public:
-        mestoOtduxaValidator(QObject *parent) {}
+        mestoOtduxaValidator(QObject *parent) : QValidator(parent){}
         ~mestoOtduxaValidator() {}
         QValidator::State validate(QString & input, int & pos ) const;
 };

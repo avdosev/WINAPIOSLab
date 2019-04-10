@@ -4,13 +4,15 @@
 #include <QMap>
 #include <QVector>
 
-#include "tyristmanual.h"
+#include "databaseprototype.h"
 
-class DataBase
+class DataBase : public DataBasePrototype
 {
 	private:
         QMap <id_type, TyristManual> data;
 		bool moding;
+        bool isUniqueId(id_type id) const;
+        id_type getUniqueId() const;
 	public:
         DataBase();
         ~DataBase();
@@ -24,8 +26,6 @@ class DataBase
 		bool load(QString filename);
 		void clear();
         bool isModidfied() const;
-		bool isUniqueId(id_type id) const;
-        id_type getUniqueId() const;
 
 };
 

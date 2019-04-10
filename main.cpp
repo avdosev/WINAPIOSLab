@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "datastream.h"
+#include "database.h"
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -34,7 +34,10 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-    qInstallMessageHandler(myMessageOutput);
+
+    qInstallMessageHandler(myMessageOutput);// устанавливаем обработку qdebug в логфайл
+
+    //DataBase dataBase;
     MainWindow w;
     w.show();
     qsrand( QTime::currentTime().msec() );

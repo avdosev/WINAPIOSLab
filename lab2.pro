@@ -29,7 +29,8 @@ SOURCES += \
     main.cpp \
     mestootduxavalidator.cpp \
     datastream.cpp \
-    database.cpp
+    database.cpp \
+    databasecontroller.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -37,7 +38,9 @@ HEADERS += \
     mestootduxavalidator.h \
     tyristmanualqlistwidgetitem.h \
     datastream.h \
-    database.h
+    database.h \
+    databaseprototype.h \
+    databasecontroller.h
 
 FORMS += \
         mainwindow.ui
