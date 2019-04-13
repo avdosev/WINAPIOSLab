@@ -8,6 +8,8 @@
 
 #include "database.h"
 
+#include "thread.h"
+
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     static FILE* messageFile = fopen("logs.txt", "w");
