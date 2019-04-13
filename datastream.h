@@ -1,10 +1,8 @@
 #pragma once
 
 #include <QString>
-#include <QDebug>
 
-#include <windows.h>
-
+#include <windef.h>
 
 using Size_t = unsigned long;
 

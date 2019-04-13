@@ -1,6 +1,8 @@
-#include <windows.h>
+//#include <windows.h>
 
 #include "datastream.h"
+
+#include <windows.h>
 #include <QDebug>
 
 DataStream::DataStream() {

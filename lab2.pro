@@ -30,7 +30,8 @@ SOURCES += \
     mestootduxavalidator.cpp \
     datastream.cpp \
     database.cpp \
-    databasecontroller.cpp
+    databasecontroller.cpp \
+    thread.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +41,8 @@ HEADERS += \
     datastream.h \
     database.h \
     databaseprototype.h \
-    databasecontroller.h
+    databasecontroller.h \
+    thread.h
 
 FORMS += \
         mainwindow.ui

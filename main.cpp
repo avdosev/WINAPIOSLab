@@ -35,9 +35,9 @@ int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 
-    qInstallMessageHandler(myMessageOutput);// устанавливаем обработку qdebug в логфайл
+    qInstallMessageHandler(myMessageOutput); // устанавливаем обработку qdebug в логфайл
 
-    auto controller = DataBaseController(new DataBase());//создаем вне класса ui
+    auto controller = DataBaseController(new DataBase()); // создаем вне класса ui
 
     MainWindow w(controller);
     w.show();
