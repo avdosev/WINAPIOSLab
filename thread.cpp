@@ -25,8 +25,10 @@ unsigned WINAPI Thread::runThread(LPVOID args) {
 void Thread::start(std::function<void()> func)  {
     void* FuncArg = new std::function<void()>(func);
     thread = (HANDLE)_beginthreadex(0, NULL, &runThread, FuncArg, 0, NULL);
-    if (thread == NULL)
+    if (thread == NULL) {
+        delete (std::function<void()>*)FuncArg; // если поток не работает то мы должны корректно удалить этот участок иначе произойдет утечка
         throw std::runtime_error("ошибка стартование ядра");
+    }
 }
 
 void Thread::quit() {
