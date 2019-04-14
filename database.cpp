@@ -7,20 +7,26 @@
 
 #include "datastream.h"
 
-static const QString nameFileDataBase = "database.db";
+static const QString dirFileDataBase = "./database.db";
+static const uint periodAutoSave = 5000;
 
 DataBase::DataBase()
 {
     moding = false;
 
-    QString dir = QDir::currentPath() + "\\" + nameFileDataBase;
-    load(dir);
+    load(dirFileDataBase);
+    autoSaveTimer.set_time_miliseconds(periodAutoSave);
+    autoSaveTimer.set_callback([this](){
+        qDebug() << "произошло автосохранение базы данных";
+        this->save(dirFileDataBase);
+    });
+    autoSaveTimer.start();
 }
 
 DataBase::~DataBase()
 {
-    QString dir = QDir::currentPath() + "\\" + nameFileDataBase;
-    save(dir);
+    autoSaveTimer.stop();
+    save(dirFileDataBase);
 }
 
 int DataBase::count() const {
@@ -66,7 +72,7 @@ QVector<TyristManual> DataBase::records() {
 bool DataBase::save(QString filename) {
     DataStream stream;
     if (stream.open(filename, DataStream::out | DataStream::trunc)) {
-        qDebug() << "файл успешно был создан";
+        qDebug() << "файл успешно был сохранен";
     } else {
         qDebug() << "не предвиденная ошибка";
         qDebug() << "файл:" << filename << "не создан";

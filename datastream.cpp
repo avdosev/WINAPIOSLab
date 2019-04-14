@@ -47,8 +47,6 @@ bool DataStream::open(QString filename, uint32_t flags) {
 
     if (!fileOpen) {
         qDebug() << "Ошибка при открытии файла: " << filename;
-    } else {
-        qDebug() << "Файл: " << filename << " успешно открыт";
     }
 
     if ((bitflags & io::ate) && fileOpen) SetFilePointer(file,0,NULL,FILE_END);
@@ -61,7 +59,6 @@ bool DataStream::is_open() {
 }
 
 void DataStream::close() {
-    qDebug() << "закрытие потока";
     CloseHandle(file);
     file = NULL;
 }

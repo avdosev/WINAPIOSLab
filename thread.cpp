@@ -4,25 +4,22 @@
 
 Thread::Thread()
 {
-
+    thread = NULL;
 }
 
 Thread::~Thread()  {
 
 }
 
-void Thread::exit(uint ExitCode)  {
-    _endthreadex(ExitCode);
-}
-
 unsigned WINAPI Thread::runThread(LPVOID args) {
 //    auto thrd = reinterpret_cast<const Thread*>(args);
 //    thrd->run();
 //    emit thrd->finished;
-    auto func = reinterpret_cast<std::function<void()>*>(args);
-    (*func)();
-    delete func;
-    return 0;
+    auto func_ptr = reinterpret_cast<std::function<void()>*>(args);
+    std::function<void()> func = *func_ptr;
+    delete func_ptr;
+    func();
+    _endthreadex(0);
 }
 
 void Thread::start(std::function<void()> func)  {
@@ -32,12 +29,12 @@ void Thread::start(std::function<void()> func)  {
         throw std::runtime_error("ошибка стартование ядра");
 }
 
-void Thread::quit()  {
-
+void Thread::quit() {
+    CloseHandle(thread);
 }
 
 bool Thread::running() const  {
-
+    return WaitForSingleObject(thread, 10) == WAIT_TIMEOUT;
 }
 
 //void Thread::make_signal_started() const {

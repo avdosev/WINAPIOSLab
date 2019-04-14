@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = lab2
+TARGET = project
 TEMPLATE = app
 CONFIG += c++11
 # The following define makes your compiler emit warnings if you use
@@ -31,7 +31,8 @@ SOURCES += \
     datastream.cpp \
     database.cpp \
     databasecontroller.cpp \
-    thread.cpp
+    thread.cpp \
+    timer.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -42,7 +43,8 @@ HEADERS += \
     database.h \
     databaseprototype.h \
     databasecontroller.h \
-    thread.h
+    thread.h \
+    timer.h
 
 FORMS += \
         mainwindow.ui

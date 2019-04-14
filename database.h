@@ -4,6 +4,7 @@
 #include <QMap>
 
 #include "databaseprototype.h"
+#include "timer.h"
 
 class DataBase : public DataBasePrototype
 {
@@ -12,6 +13,7 @@ class DataBase : public DataBasePrototype
 		bool moding;
         bool isUniqueId(id_type id) const;
         id_type getUniqueId() const;
+        Timer autoSaveTimer;
 	public:
         DataBase();
         ~DataBase();
