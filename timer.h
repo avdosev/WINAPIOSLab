@@ -2,6 +2,7 @@
 #define TIMER_H
 
 #include <functional>
+#include <memory>
 #include <thread.h>
 
 class Timer
@@ -10,7 +11,7 @@ class Timer
         Thread _timer_thread;
         std::function<void()> _callback;
         unsigned _time = 1000;
-        bool run;
+        std::shared_ptr<bool> run;
     public:
         Timer();
         void set_callback(std::function<void()> callback);

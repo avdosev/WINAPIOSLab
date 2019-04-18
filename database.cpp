@@ -8,7 +8,7 @@
 #include "datastream.h"
 
 static const QString dirFileDataBase = "./database.db";
-static const uint periodAutoSave = 5000;
+static const uint periodAutoSave = 5000; // по моим расчетам около 5 секунд
 
 DataBase::DataBase()
 {

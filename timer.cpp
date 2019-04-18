@@ -8,20 +8,26 @@ Timer::Timer()
 }
 
 void Timer::start() {
-    this->run = true;
-    _timer_thread.start([this](){
-        while (this->run) {
-            Sleep(this->_time);
-            if (!this->run)
+    this->run = std::make_shared<bool>(true);
+    // строки ниже необходимы для захвата перменных, тк захватить поля класса стандарт с++ не позволяет
+    // либо использовать синтаксически засахаренную версию того же самого но в версии с++14
+    auto _callback = this->_callback;
+    auto _time = this->_time;
+    auto run = this->run;
+    _timer_thread.start([_callback,_time, run](){
+        while (*run) {
+            Sleep(_time);
+            if (!*run)
                 break;
-            this->_callback();
+            _callback();
             qDebug() << "timer tick";
         }
     });
 }
 
 void Timer::stop() {
-    this->run = false;
+    if (run != nullptr)
+        *this->run = false;
 }
 
 void Timer::set_callback(std::function<void()> callback) {
