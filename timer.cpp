@@ -1,5 +1,6 @@
 #include "timer.h"
 #include <synchapi.h>
+#include <QDebug>
 
 Timer::Timer()
 {
@@ -14,6 +15,7 @@ void Timer::start() {
             if (!this->run)
                 break;
             this->_callback();
+            qDebug() << "timer tick";
         }
     });
 }

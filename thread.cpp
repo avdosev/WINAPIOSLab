@@ -26,7 +26,7 @@ void Thread::start(std::function<void()> func)  {
     void* FuncArg = new std::function<void()>(func);
     thread = (HANDLE)_beginthreadex(0, NULL, &runThread, FuncArg, 0, NULL);
     if (thread == NULL) {
-        delete (std::function<void()>*)FuncArg; // если поток не работает то мы должны корректно удалить этот участок иначе произойдет утечка
+        delete (std::function<void()>*)FuncArg; // если поток не работает то мы должны корректно удалить этот участок иначе произойдет утечка памяти
         throw std::runtime_error("ошибка стартование ядра");
     }
 }

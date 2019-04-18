@@ -26,7 +26,7 @@ DataBase::DataBase()
 DataBase::~DataBase()
 {
     autoSaveTimer.stop();
-    save(dirFileDataBase);
+    //save(dirFileDataBase);
 }
 
 int DataBase::count() const {
