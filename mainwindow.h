@@ -15,7 +15,7 @@ class MainWindow : public QMainWindow
 		Q_OBJECT
 
 	public:
-        explicit MainWindow(DataBaseController controller, QWidget *parent = nullptr);
+        explicit MainWindow(QWidget *parent = nullptr);
 
         TyristManual getDataFromUi();
 		void loadDataToUi(const TyristManual & import);

@@ -12,6 +12,7 @@ class DataBasePrototype
         virtual id_type append(TyristManual record) = 0;
         virtual void remove(id_type id) = 0;
         virtual void update(id_type record_id, TyristManual record) = 0;
+        virtual int compareRecordsByID(id_type, id_type) = 0;
         virtual TyristManual record(id_type id) const = 0;
         virtual QVector<TyristManual> records() = 0;
         virtual bool save(QString filename) = 0;

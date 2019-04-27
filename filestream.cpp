@@ -2,8 +2,10 @@
 
 #include "filestream.h"
 
-#include <windows.h>
+#include <winbase.h>
+
 #include <QDebug>
+
 
 bool FileStream::open(QString filename, uint32_t flags) {
     if (file != NULL) close();
@@ -37,7 +39,7 @@ bool FileStream::open(QString filename, uint32_t flags) {
     bool fileOpen = file != INVALID_HANDLE_VALUE;
 
     if (!fileOpen) {
-        qDebug() << "Ошибка при открытии файла: " << filename;
+        qDebug() << "File open error: " << filename;
     }
 
     if ((bitflags & io::ate) && fileOpen) SetFilePointer(file,0,NULL,FILE_END);

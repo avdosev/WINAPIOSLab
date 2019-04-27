@@ -45,6 +45,13 @@ bool DataStream::write(void* begin, Size_t size) {
     return bRes;
 }
 
+HANDLE DataStream::getHandle() const {
+    return this->file;
+}
+void DataStream::setHandle(HANDLE newHandle) {
+    return this->file = newHandle;
+}
+
 DataStream& operator << (DataStream& stream, QString value) {
     stream << value.size();
     for (auto item : value) {

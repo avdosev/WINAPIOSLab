@@ -1,5 +1,4 @@
-#ifndef DATASTREAM_H
-#define DATASTREAM_H
+#pragma once
 
 #include <QString>
 
@@ -31,6 +30,11 @@ class DataStream
         bool write(void* begin, Size_t size);
         bool read(void* begin, Size_t size);
 
+        // в нормальном классе так быть не должно
+        HANDLE getHandle() const;
+        void setHandle(HANDLE);
+
+
         virtual bool open(QString filename, uint32_t flags) = 0;
 };
 
@@ -51,4 +55,3 @@ DataStream& operator >> (DataStream& stream, num_t& value) {
     return stream;
 }
 
-#endif // DATASTREAM_H

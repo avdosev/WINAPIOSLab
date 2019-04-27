@@ -29,7 +29,7 @@ class tyristManualQListWidgetItem : public QListWidgetItem//хоп а кто е�
 
         bool operator < (const QListWidgetItem &other) const {
             const tyristManualQListWidgetItem& tmp = static_cast<const tyristManualQListWidgetItem&>(other);
-            return this->d->record(id) < tmp.d->record(tmp.id);
+            return d->compareRecordsByID(this->id, tmp.id) <= -1;
         }
 };
 

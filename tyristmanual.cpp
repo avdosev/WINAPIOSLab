@@ -103,6 +103,44 @@ QString TyristManual::toQString() const {
     return TyristManual::getListRestTypes().at(restType) + "  |  " + restPlace + "  |  " + QString::number(cost);
 }
 
+DataStream& operator << (DataStream& stream, TyristManual tmp) {
+    stream << tmp.get_restType();
+    stream << tmp.get_country();
+    stream << tmp.get_restPlace();
+    stream << tmp.get_cost();
+    stream << tmp.get_duration();
+    stream << tmp.get_visa();
+    return stream;
+}
+DataStream& operator >> (DataStream& stream, TyristManual& tmp_tyrist) {
+    QString tmp_str;
+    int tmp_int;
+    stream >> tmp_int;
+    tmp_tyrist.set_restType(tmp_int);
+    stream >> tmp_int;
+    tmp_tyrist.set_country(tmp_int);
+    stream >> tmp_str;
+    tmp_tyrist.set_restPlace(tmp_str);
+    stream >> tmp_int;
+    tmp_tyrist.set_cost(tmp_int);
+    stream >> tmp_int;
+    tmp_tyrist.set_duration(tmp_int);
+    stream >> tmp_int;
+    tmp_tyrist.set_visa(tmp_int);
+    return stream;
+}
+
+PipeStream& operator << (PipeStream& stream, TyristManual tmp) {
+    static_cast<DataStream&>(stream) << tmp;
+    stream << tmp.id;
+    return stream;
+}
+PipeStream& operator >> (PipeStream& stream, TyristManual& tmp_tyrist) {
+    static_cast<DataStream&>(stream) >> tmp_tyrist;
+    stream >> tmp_tyrist.id;
+    return stream;
+}
+
 bool operator > (const TyristManual& c1, const TyristManual& c2) {
 	return TyristManual::compare(c1, c2) > 0;
 }

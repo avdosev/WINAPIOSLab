@@ -2,19 +2,20 @@
 #define DATABASECONTROLLER_H
 
 #include <databaseprototype.h>
-#include <memory>
+#include <pipestream.h>
 
 class DataBaseController : public DataBasePrototype
 {
     private:
-        std::shared_ptr<DataBasePrototype> prototype_ptr;
+        PipeStream commandOutputStream, dataInputStream, dataOutputStream;
     public:
-        DataBaseController(DataBasePrototype* prototype = nullptr);
+        DataBaseController();
         ~DataBaseController();
         int count() const;
         id_type append(TyristManual record);
         void remove(id_type id);
         void update(id_type record_id, TyristManual record);
+        int compareRecordsByID(id_type, id_type);
         TyristManual record(id_type id) const;
         QVector<TyristManual> records();
         bool save(QString filename);
