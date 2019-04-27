@@ -28,23 +28,27 @@ SOURCES += \
     tyristmanual.cpp \
     main.cpp \
     mestootduxavalidator.cpp \
-    datastream.cpp \
     database.cpp \
     databasecontroller.cpp \
     thread.cpp \
-    timer.cpp
+    timer.cpp \
+    filestream.cpp \
+    datastream.cpp \
+    pipestream.cpp
 
 HEADERS += \
         mainwindow.h \
     tyristmanual.h \
     mestootduxavalidator.h \
     tyristmanualqlistwidgetitem.h \
-    datastream.h \
     database.h \
     databaseprototype.h \
     databasecontroller.h \
     thread.h \
-    timer.h
+    timer.h \
+    filestream.h \
+    datastream.h \
+    pipestream.h
 
 FORMS += \
         mainwindow.ui

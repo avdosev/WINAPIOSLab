@@ -5,7 +5,7 @@
 #include <QDir>
 #include <QDebug>
 
-#include "datastream.h"
+#include "filestream.h"
 
 static const QString dirFileDataBase = "./database.db";
 static const uint periodAutoSave = 5000; // по моим расчетам около 5 секунд
@@ -70,8 +70,8 @@ QVector<TyristManual> DataBase::records() {
 }
 
 bool DataBase::save(QString filename) {
-    DataStream stream;
-    if (stream.open(filename, DataStream::out | DataStream::trunc)) {
+    FileStream stream;
+    if (stream.open(filename, FileStream::out | FileStream::trunc)) {
         qDebug() << "файл успешно был сохранен";
     } else {
         qDebug() << "не предвиденная ошибка";
@@ -98,8 +98,8 @@ bool DataBase::save(QString filename) {
 }
 
 bool DataBase::load(QString filename) {
-    DataStream stream;
-    if(!stream.open(filename, DataStream::in)) {
+    FileStream stream;
+    if(!stream.open(filename, FileStream::in)) {
         qDebug() << "файл:" << filename << " не открылся";
 		return false; // если файл не открылся
 	}

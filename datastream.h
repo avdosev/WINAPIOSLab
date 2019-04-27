@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DATASTREAM_H
+#define DATASTREAM_H
 
 #include <QString>
 
@@ -8,7 +9,7 @@ using Size_t = unsigned long;
 
 class DataStream
 {
-    private:
+    protected:
         HANDLE file;
         //OFSTRUCT infoFile;
         bool endFile;
@@ -23,14 +24,14 @@ class DataStream
         };
 
         DataStream();
-        ~DataStream();
-        bool open(QString filename, uint32_t flags);
+        virtual ~DataStream();
         bool is_open();
         void close();
         bool eof();
         bool write(void* begin, Size_t size);
         bool read(void* begin, Size_t size);
 
+        virtual bool open(QString filename, uint32_t flags) = 0;
 };
 
 DataStream& operator << (DataStream&, QChar);
@@ -50,4 +51,4 @@ DataStream& operator >> (DataStream& stream, num_t& value) {
     return stream;
 }
 
-//#endif // WINDATASTREAM_H
+#endif // DATASTREAM_H

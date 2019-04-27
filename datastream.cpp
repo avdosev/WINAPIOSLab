@@ -1,57 +1,15 @@
-//#include <windows.h>
-
 #include "datastream.h"
 
 #include <windows.h>
 #include <QDebug>
 
-DataStream::DataStream() {
+DataStream::DataStream()
+{
     file = NULL;
-    //memset(&infoFile, 0, sizeof(infoFile));
 }
 
 DataStream::~DataStream() {
     close();
-}
-
-bool DataStream::open(QString filename, uint32_t flags) {
-    if (file != NULL) close();
-    DWORD DesiredAccess = 0, // в режим чтения/запись
-            CreationDisposition = 0, // как открывать
-            FileAttribute = 0; // атрибут файла - константа
-    uint32_t bitflags = flags;
-    FileAttribute = FILE_ATTRIBUTE_NORMAL;
-    if (bitflags & io::in)  DesiredAccess |= GENERIC_READ;
-    if (bitflags & io::out) DesiredAccess |= GENERIC_WRITE;
-
-    if (bitflags & io::create) {
-        CreationDisposition |= CREATE_ALWAYS;
-    } else {
-        CreationDisposition |= OPEN_EXISTING;
-    }
-
-    if (bitflags & io::trunc) {
-        open(filename, io::create); // создаем файл в любом случае после чего идем по плану
-        close();
-    }
-
-    file = CreateFileA(filename.toStdString().c_str(),
-                       DesiredAccess,
-                       0,
-                       NULL,
-                       CreationDisposition,
-                       FileAttribute,
-                       NULL);
-
-    bool fileOpen = file != INVALID_HANDLE_VALUE;
-
-    if (!fileOpen) {
-        qDebug() << "Ошибка при открытии файла: " << filename;
-    }
-
-    if ((bitflags & io::ate) && fileOpen) SetFilePointer(file,0,NULL,FILE_END);
-
-    return fileOpen;
 }
 
 bool DataStream::is_open() {
@@ -70,16 +28,18 @@ bool DataStream::eof() {
 }
 
 bool DataStream::read(void* begin, Size_t size) {
-    auto bRes = ReadFile(file, begin, size, &size, NULL);
-    if (!bRes) {
+    Size_t readByte = size;
+    auto bRes = ReadFile(file, begin, size, &readByte, NULL);
+    if (!bRes && readByte != size) {
         qDebug() << "fail read";
     }
     return bRes;
 }
 
 bool DataStream::write(void* begin, Size_t size) {
-    auto bRes = WriteFile(file, begin, size, &size, NULL);
-    if (!bRes) {
+    Size_t readByte = size;
+    auto bRes = WriteFile(file, begin, size, &readByte, NULL);
+    if (!bRes && readByte != size) {
         qDebug() << "fail write";
     }
     return bRes;
@@ -119,5 +79,3 @@ DataStream& operator >> (DataStream& stream, QChar &value) {
     value = chr;
     return stream;
 }
-
-
