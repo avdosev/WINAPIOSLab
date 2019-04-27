@@ -2,6 +2,8 @@
 
 #include <server_command.h>
 
+#include <exception>
+
 const static QString
 commandOutputStreamName,
 dataInputStreamName,
@@ -9,14 +11,20 @@ dataOutputStreamName
 ;
 
 DataBaseController::DataBaseController() {
-    bool fullConnect = true, notConnectedStream = false;
+    bool fullConnect = true, hasConnectedStream = false;
+    int poputok = 0;
+    bool commandOutConnected = false, dataInputConnected = false, dataOutputConnected = false;
+    do {
+        if (!commandOutConnected) commandOutConnected = commandOutputStream.open(commandOutputStreamName, DataStream::out);
+        if (!dataInputConnected) dataInputConnected = dataInputStream.open(dataInputStreamName, DataStream::in);
+        if (!dataOutputConnected) dataOutputConnected = dataOutputStream.open(dataOutputStreamName, DataStream::out);
 
-    bool commandOutConnected
-    commandOutputStream.open(commandOutputStreamName, DataStream::out);
-    dataInputStream.open(dataInputStreamName, DataStream::in);
-    dataOutputStream.open(dataOutputStreamName, DataStream::out);
-
-    if (!fullConnect);
+        fullConnect = commandOutConnected && dataInputConnected && dataOutputConnected;
+        hasConnectedStream = commandOutConnected || dataInputConnected || dataOutputConnected;
+    } while ((!fullConnect && hasConnectedStream) || poputok > 3);
+    if (!fullConnect) {
+        throw std::runtime_error("error connected to server");
+    }
 }
 
 DataBaseController::~DataBaseController() {
@@ -24,41 +32,93 @@ DataBaseController::~DataBaseController() {
 }
 
 int DataBaseController::count() const {
-
+    int count;
+    commandOutputStream << ServerCommand::count;
+    dataInputStream >> count;
+    return count;
 }
 
 id_type DataBaseController::append(TyristManual record) {
-
+    commandOutputStream << ServerCommand::append;
+    dataOutputStream << record;
+    id_type id;
+    dataInputStream >> id;
+    return id;
 }
 
 void DataBaseController::remove(id_type id) {
-
+    commandOutputStream << ServerCommand::remove;
+    dataOutputStream << id;
 }
 
 void DataBaseController::update(id_type record_id, TyristManual record) {
-
+    commandOutputStream << ServerCommand::update;
+    dataOutputStream << record_id << record;
 }
 
 TyristManual DataBaseController::record(id_type id) const {
+    TyristManual tmp;
 
+    commandOutputStream << ServerCommand::record;
+    dataOutputStream << id;
+    dataInputStream >> tmp;
+
+    return tmp;
 }
 
 QVector<TyristManual> DataBaseController::records() {
-
+    QVector<TyristManual> tmp;
+    int vector_size = 0;
+    commandOutputStream << ServerCommand::records;
+    dataInputStream >> vector_size;
+    tmp.resize(vector_size);
+    for (int i = 0; i < vector_size; i++) {
+        TyristManual tmp_record;
+        dataInputStream >> tmp_record;
+        tmp.push_back(tmp_record);
+    }
+    return tmp;
 }
 
 bool DataBaseController::save(QString filename) {
+    bool bulk;
 
+    commandOutputStream << ServerCommand::save;
+    dataOutputStream << filename;
+    dataInputStream >> bulk;
+
+    return bulk;
 }
 
 bool DataBaseController::load(QString filename) {
+    bool bulk;
 
+    commandOutputStream << ServerCommand::load;
+    dataOutputStream << filename;
+    dataInputStream >> bulk;
+
+    return bulk;
 }
 
 void DataBaseController::clear() {
-
+    commandOutputStream << ServerCommand::clear;
 }
 
 bool DataBaseController::isModidfied() const {
+    bool res;
 
+    commandOutputStream << ServerCommand::is_modified;
+    dataInputStream >> res;
+
+    return res;
+}
+
+int DataBaseController::compareRecordsByID(id_type first, id_type second) {
+    int res;
+
+    commandOutputStream << ServerCommand::compare_two_records;
+    dataOutputStream << first << second;
+    dataInputStream >> res;
+
+    return res;
 }

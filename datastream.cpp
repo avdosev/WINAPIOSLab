@@ -49,7 +49,7 @@ HANDLE DataStream::getHandle() const {
     return this->file;
 }
 void DataStream::setHandle(HANDLE newHandle) {
-    return this->file = newHandle;
+    this->file = newHandle;
 }
 
 DataStream& operator << (DataStream& stream, QString value) {

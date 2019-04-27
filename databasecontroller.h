@@ -7,7 +7,7 @@
 class DataBaseController : public DataBasePrototype
 {
     private:
-        PipeStream commandOutputStream, dataInputStream, dataOutputStream;
+        mutable PipeStream commandOutputStream, dataInputStream, dataOutputStream;
     public:
         DataBaseController();
         ~DataBaseController();

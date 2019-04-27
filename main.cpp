@@ -32,14 +32,21 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     }
 }
 
+#include <QMessageBox>
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 
     qInstallMessageHandler(myMessageOutput); // устанавливаем обработку qdebug в логфайл
-
-    MainWindow w;
-    w.show();
+    try {
+        MainWindow w;
+        w.show();
+    } catch (std::exception error) {
+        qDebug() << error.what();
+        QMessageBox::critical(nullptr, "Ошибка подключения к серверу", "К сожалению приложение не может работать");
+        //a.exit(-1);
+        return -1;
+    }
 
     qsrand( QTime::currentTime().msec() );
 

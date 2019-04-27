@@ -6,13 +6,11 @@
 #include <QFileDialog>
 #include <QCloseEvent>
 
-MainWindow::MainWindow(DataBaseController controller, QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent) :
 QMainWindow(parent),
 ui(new Ui::MainWindow)
 {
 	ui->setupUi(this);
-
-    records = controller;// это важно
 
 	setWindowTitle(tr("Туристический справочник"));
     ui->mestoOtduxaStr->setValidator(new mestoOtduxaValidator(this));
