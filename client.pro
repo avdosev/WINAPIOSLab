@@ -26,11 +26,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         mainwindow.cpp \
     tyristmanual.cpp \
-    main.cpp \
+    main_client.cpp \
     mestootduxavalidator.cpp \
     databasecontroller.cpp \
-    thread.cpp \
-    timer.cpp \
     filestream.cpp \
     datastream.cpp \
     pipestream.cpp
@@ -42,8 +40,6 @@ HEADERS += \
     tyristmanualqlistwidgetitem.h \
     databaseprototype.h \
     databasecontroller.h \
-    thread.h \
-    timer.h \
     filestream.h \
     datastream.h \
     pipestream.h \
