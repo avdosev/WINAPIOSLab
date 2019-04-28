@@ -47,3 +47,7 @@ bool PipeStream::open(QString filename, uint32_t flags) {
 
     return false;
 }
+
+bool PipeStream::waitingClient() {
+    return ConnectNamedPipe(file, nullptr);
+}

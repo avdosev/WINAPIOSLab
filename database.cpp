@@ -17,7 +17,7 @@ DataBase::DataBase()
     load(dirFileDataBase);
     autoSaveTimer.set_time_miliseconds(periodAutoSave);
     autoSaveTimer.set_callback([this](){
-        qDebug() << "произошло автосохранение базы данных";
+        qDebug() << "database autosaved";
         this->save(dirFileDataBase);
     });
     autoSaveTimer.start();
@@ -50,6 +50,10 @@ void DataBase::update(id_type record_id, TyristManual record) {
     moding = true;
     record.id = record_id;
     data[record_id] = record;
+}
+
+int DataBase::compareRecordsByID(id_type first, id_type second) {
+    return TyristManual::compare(this->record(first),this->record(second));
 
 }
 
@@ -72,10 +76,10 @@ QVector<TyristManual> DataBase::records() {
 bool DataBase::save(QString filename) {
     FileStream stream;
     if (stream.open(filename, FileStream::out | FileStream::trunc)) {
-        qDebug() << "файл успешно был сохранен";
+        qDebug() << "file saved";
     } else {
-        qDebug() << "не предвиденная ошибка";
-        qDebug() << "файл:" << filename << "не создан";
+        qDebug() << "file save error";
+        qDebug() << "file:" << filename << "not created";
         return false;
     }
 
@@ -100,7 +104,7 @@ bool DataBase::save(QString filename) {
 bool DataBase::load(QString filename) {
     FileStream stream;
     if(!stream.open(filename, FileStream::in)) {
-        qDebug() << "файл:" << filename << " не открылся";
+        qDebug() << "file:" << filename << " not opened";
 		return false; // если файл не открылся
 	}
     int size;

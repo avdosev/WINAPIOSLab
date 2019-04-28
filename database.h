@@ -21,6 +21,7 @@ class DataBase : public DataBasePrototype
         id_type append(TyristManual record);
 		void remove(id_type id);
         void update(id_type record_id, TyristManual record);
+        int compareRecordsByID(id_type, id_type);
         TyristManual record(id_type id) const;
         QVector<TyristManual> records();
         bool save(QString filename);
