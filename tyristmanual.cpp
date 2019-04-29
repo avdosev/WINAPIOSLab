@@ -110,6 +110,7 @@ DataStream& operator << (DataStream& stream, TyristManual tmp) {
     stream << tmp.get_cost();
     stream << tmp.get_duration();
     stream << tmp.get_visa();
+    stream << tmp.id;
     return stream;
 }
 DataStream& operator >> (DataStream& stream, TyristManual& tmp_tyrist) {
@@ -127,16 +128,6 @@ DataStream& operator >> (DataStream& stream, TyristManual& tmp_tyrist) {
     tmp_tyrist.set_duration(tmp_int);
     stream >> tmp_int;
     tmp_tyrist.set_visa(tmp_int);
-    return stream;
-}
-
-PipeStream& operator << (PipeStream& stream, TyristManual tmp) {
-    static_cast<DataStream&>(stream) << tmp;
-    stream << tmp.id;
-    return stream;
-}
-PipeStream& operator >> (PipeStream& stream, TyristManual& tmp_tyrist) {
-    static_cast<DataStream&>(stream) >> tmp_tyrist;
     stream >> tmp_tyrist.id;
     return stream;
 }

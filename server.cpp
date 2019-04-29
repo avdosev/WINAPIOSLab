@@ -12,23 +12,24 @@ Server::Server() : running(false)
 int Server::exec() {
     qDebug() << "STARTING THE SERVER";
 
-    QString dataInputPipeName = "",
-            dataOutputPipeName = "",
-            commandInputPipeName = "";
+    QString dataInputPipeName = "\\\\.\\pipe\\dataInputPipe",
+            dataOutputPipeName = "\\\\.\\pipe\\dataOutputPipe",
+            commandInputPipeName = "\\\\.\\pipe\\commandInputPipe";
 
     PipeStream dataInputPipe, dataOutputPipe, commandInputPipe;
 
-
-
     if (!dataInputPipe.open(dataInputPipeName, DataStream::create | DataStream::in) ||
-            dataOutputPipe.open(dataOutputPipeName, DataStream::create | DataStream::out) ||
-            commandInputPipe.open(commandInputPipeName, DataStream::create | DataStream::in))
+            !dataOutputPipe.open(dataOutputPipeName, DataStream::create | DataStream::out) ||
+            !commandInputPipe.open(commandInputPipeName, DataStream::create | DataStream::in))
     {
         qCritical() << "Couldn't create pipe";
         return -1;
     }
 
     qDebug() << "Input pipe has created." << endl << "Waiting for clients.." << endl;
+    // по идее достаточно дождаться какогото одного
+    // но это не точно
+    commandInputPipe.waitingClient();
 
     qDebug() << "Client has been connected." << endl << endl;
 
@@ -80,9 +81,12 @@ bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &out
             }
             case ServerCommand::records: {
                 auto recs = db.records();
+                qDebug() << "size" << recs.size() << "\nwith items";
                 output << recs.size();
                 for (TyristManual item : recs) {
                     output << item;
+                    qDebug() << "item: " << item.id;
+
                 }
                 break;
             }

@@ -4,10 +4,12 @@
 
 #include <exception>
 
+#include <QDebug>
+
 const static QString
-commandOutputStreamName,
-dataInputStreamName,
-dataOutputStreamName
+commandOutputStreamName = "\\\\.\\pipe\\commandInputPipe",
+dataInputStreamName = "\\\\.\\pipe\\dataOutputPipe",
+dataOutputStreamName = "\\\\.\\pipe\\dataInputPipe"
 ;
 
 DataBaseController::DataBaseController() {
@@ -21,14 +23,18 @@ DataBaseController::DataBaseController() {
 
         fullConnect = commandOutConnected && dataInputConnected && dataOutputConnected;
         hasConnectedStream = commandOutConnected || dataInputConnected || dataOutputConnected;
-    } while ((!fullConnect && hasConnectedStream) || poputok > 3);
+        poputok++;
+    } while (!fullConnect && hasConnectedStream && poputok < 10);
     if (!fullConnect) {
         throw std::runtime_error("error connected to server");
     }
 }
 
 DataBaseController::~DataBaseController() {
-
+    if (commandOutputStream.is_open()) {
+        qDebug() << "end connection";
+        commandOutputStream << ServerCommand::end_connection;
+    }
 }
 
 int DataBaseController::count() const {
@@ -71,7 +77,7 @@ QVector<TyristManual> DataBaseController::records() {
     int vector_size = 0;
     commandOutputStream << ServerCommand::records;
     dataInputStream >> vector_size;
-    tmp.resize(vector_size);
+    tmp.reserve(vector_size);
     for (int i = 0; i < vector_size; i++) {
         TyristManual tmp_record;
         dataInputStream >> tmp_record;

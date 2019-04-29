@@ -45,7 +45,7 @@ bool PipeStream::open(QString filename, uint32_t flags) {
         qDebug() << "Pipe create error: " << filename;
     }
 
-    return false;
+    return fileOpen;
 }
 
 bool PipeStream::waitingClient() {

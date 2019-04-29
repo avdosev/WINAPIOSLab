@@ -37,10 +37,11 @@ int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 
-    qInstallMessageHandler(myMessageOutput); // устанавливаем обработку qdebug в логфайл
+    //qInstallMessageHandler(myMessageOutput); // устанавливаем обработку qdebug в логфайл
     try {
         MainWindow w;
         w.show();
+        return a.exec();
     } catch (std::exception error) {
         qDebug() << error.what();
         QMessageBox::critical(nullptr, "Ошибка подключения к серверу", "К сожалению приложение не может работать");
@@ -50,5 +51,4 @@ int main(int argc, char *argv[])
 
     qsrand( QTime::currentTime().msec() );
 
-	return a.exec();
 }

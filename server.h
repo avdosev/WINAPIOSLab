@@ -4,6 +4,8 @@
 #include <database.h>
 #include <server_command.h>
 
+#include <pipestream.h>
+
 class Server
 {
     private:

@@ -26,7 +26,7 @@ DataBase::DataBase()
 DataBase::~DataBase()
 {
     autoSaveTimer.stop();
-    //save(dirFileDataBase);
+    save(dirFileDataBase);
 }
 
 int DataBase::count() const {
@@ -61,7 +61,8 @@ TyristManual DataBase::record(id_type id) const {
 	if(data.contains(id))
 		return data[id];
     //если нет такого айди то кидаем исключение
-    throw std::runtime_error("запись с нужным id отсутствует");
+    std::string what_error = "records with id " + std::to_string(id) + " not found";
+    throw std::runtime_error(what_error);
 }
 
 QVector<TyristManual> DataBase::records() {
@@ -89,12 +90,7 @@ bool DataBase::save(QString filename) {
     QMapIterator<id_type, TyristManual> it (data);
 	while (it.hasNext()) {
         TyristManual tmp = it.next().value();
-        stream << tmp.get_restType();
-        stream << tmp.get_country();
-        stream << tmp.get_restPlace();
-        stream << tmp.get_cost();
-        stream << tmp.get_duration();
-		stream << tmp.get_visa();
+        stream << tmp;
 	}
 
 	moding = false;
@@ -112,20 +108,7 @@ bool DataBase::load(QString filename) {
     for (int i = 0; i < size; i++) {
     //while (!stream.eof()) { // не работает
         TyristManual tmp_tyrist;
-		QString tmp_str;
-		int tmp_int;
-		stream >> tmp_int;
-		tmp_tyrist.set_restType(tmp_int);
-		stream >> tmp_int;
-        tmp_tyrist.set_country(tmp_int);
-		stream >> tmp_str;
-        tmp_tyrist.set_restPlace(tmp_str);
-		stream >> tmp_int;
-        tmp_tyrist.set_cost(tmp_int);
-		stream >> tmp_int;
-        tmp_tyrist.set_duration(tmp_int);
-		stream >> tmp_int;
-		tmp_tyrist.set_visa(tmp_int);
+        stream >> tmp_tyrist;
 		append(tmp_tyrist);
     }
 	return true;
