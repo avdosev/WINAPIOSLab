@@ -51,22 +51,26 @@ bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &out
     try {
         switch (command) {
             case ServerCommand::count: {
+                qDebug() << "count";
                 output << db.count();
                 break;
             }
             case ServerCommand::append: {
+                qDebug() << "append";
                 TyristManual value;
                 input >> value;
                 output << db.append(value);
                 break;
             }
             case ServerCommand::remove: {
+                qDebug() << "remove";
                 id_type id;
                 input >> id;
                 db.remove(id);
                 break;
             }
             case ServerCommand::update: {
+                qDebug() << "update";
                 id_type id;
                 TyristManual value;
                 input >> id >> value;
@@ -74,12 +78,14 @@ bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &out
                 break;
             }
             case ServerCommand::compare_two_records: {
+                qDebug() << "compare two record";
                 id_type first, second;
                 input >> first >> second;
                 output << db.compareRecordsByID(first, second);
                 break;
             }
             case ServerCommand::records: {
+                qDebug() << "records";
                 auto recs = db.records();
                 qDebug() << "size" << recs.size() << "\nwith items";
                 output << recs.size();
@@ -91,6 +97,7 @@ bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &out
                 break;
             }
             case ServerCommand::record: {
+                qDebug() << "record";
                 id_type id;
                 input >> id;
                 output << db.record(id);
@@ -109,6 +116,7 @@ bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &out
                 break;
             }
             case ServerCommand::clear: {
+                qDebug() << "clear";
                 db.clear();
                 break;
             }

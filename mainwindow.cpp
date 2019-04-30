@@ -19,7 +19,7 @@ ui(new Ui::MainWindow)
 
 	//делаем все кнопки активными
 	loadDataToUi(TyristManual());
-
+    ui->browserRecord->setSortingEnabled(true);
     //если внутри что то есть то загружаем
     QVector <TyristManual> temp_vector = records.records();
     QVectorIterator <TyristManual> it(temp_vector);
@@ -58,7 +58,8 @@ TyristManual MainWindow::getDataFromUi() {
 }
 
 void MainWindow::updateBrowserRecords() {
-	ui->browserRecord->sortItems();
+    //ui->browserRecord->sortItems();
+    //ui->browserRecord->setSortingEnabled(true);
 }
 
 bool MainWindow::hasAcceptableInput() {
@@ -94,7 +95,9 @@ void MainWindow::on_save_clicked()
             id_type id = currentItem->get_id();
             auto temp = getDataFromUi();
             records.update(id, temp);
-			currentItem->update_text();
+            //currentItem->update_text();
+            delete currentItem;
+            addRecordToUi(id, true);
 			updateBrowserRecords();
 		}
 		else {
