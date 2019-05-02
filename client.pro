@@ -31,7 +31,8 @@ SOURCES += \
     databasecontroller.cpp \
     filestream.cpp \
     datastream.cpp \
-    pipestream.cpp
+    pipestream.cpp \
+    thread.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -43,9 +44,13 @@ HEADERS += \
     filestream.h \
     datastream.h \
     pipestream.h \
-    server_command.h
+    server_command.h \
+    config_pipe_naming.h \
+    thread.h
 
 FORMS += \
         mainwindow.ui
 
 RESOURCES +=
+
+DISTFILES +=

@@ -28,6 +28,7 @@ class MainWindow : public QMainWindow
 
         id_type addRecordToDatabase(const TyristManual & import);
 
+        void addRecordToUi(id_type id, QString text, bool setCurrent = true);
         void addRecordToUi(id_type id, bool setCurrent = true);
 
         tyristManualQListWidgetItem* getCurrentItem();

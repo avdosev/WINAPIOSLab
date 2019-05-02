@@ -40,4 +40,5 @@ HEADERS += \
     timer.h \
     tyristmanual.h \
     databaseprototype.h \
-    server.h
+    server.h \
+    config_pipe_naming.h

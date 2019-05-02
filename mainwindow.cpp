@@ -24,8 +24,10 @@ ui(new Ui::MainWindow)
     QVector <TyristManual> temp_vector = records.records();
     QVectorIterator <TyristManual> it(temp_vector);
     while (it.hasNext()) {
-        id_type id = it.next().id;
-        addRecordToUi(id, false);
+        auto item = it.next();
+        auto id = item.id;
+        auto str = item.toQString();
+        addRecordToUi(id, str, false);
     }
     updateBrowserRecords();
 }
@@ -59,7 +61,6 @@ TyristManual MainWindow::getDataFromUi() {
 
 void MainWindow::updateBrowserRecords() {
     //ui->browserRecord->sortItems();
-    //ui->browserRecord->setSortingEnabled(true);
 }
 
 bool MainWindow::hasAcceptableInput() {
@@ -73,7 +74,7 @@ bool MainWindow::hasAcceptableInput() {
 //добавляекм запись и базу данных и в ui
 void MainWindow::addRecord(const TyristManual& value, bool setCurrent) {
     auto id = addRecordToDatabase(value);
-    addRecordToUi(id, setCurrent);
+    addRecordToUi(id, value.toQString(), setCurrent);
 }
 
 id_type MainWindow::addRecordToDatabase(const TyristManual & import) {
@@ -81,9 +82,15 @@ id_type MainWindow::addRecordToDatabase(const TyristManual & import) {
     return t;
 }
 
-void MainWindow::addRecordToUi(id_type id, bool setCurrent) {
-	tyristManualQListWidgetItem* temp = new tyristManualQListWidgetItem(id, &records);
+void MainWindow::addRecordToUi(id_type id, QString text_value, bool setCurrent) {
+    tyristManualQListWidgetItem* temp = new tyristManualQListWidgetItem(id, &records, text_value);
 	ui->browserRecord->addItem(temp);
+    if (setCurrent) ui->browserRecord->setCurrentItem(temp);
+}
+
+void MainWindow::addRecordToUi(id_type id, bool setCurrent) {
+    tyristManualQListWidgetItem* temp = new tyristManualQListWidgetItem(id, &records);
+    ui->browserRecord->addItem(temp);
     if (setCurrent) ui->browserRecord->setCurrentItem(temp);
 }
 
@@ -97,7 +104,7 @@ void MainWindow::on_save_clicked()
             records.update(id, temp);
             //currentItem->update_text();
             delete currentItem;
-            addRecordToUi(id, true);
+            addRecordToUi(id, temp.toQString(), true);
 			updateBrowserRecords();
 		}
 		else {
@@ -142,7 +149,7 @@ void MainWindow::on_strana_currentRowChanged(int currentRow)
 
 void MainWindow::on_fill_clicked()
 {
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 10000; i++) {
         addRecord(TyristManual::createRandomObject(), false);
 	}
 	updateBrowserRecords();

@@ -9,10 +9,16 @@ class tyristManualQListWidgetItem : public QListWidgetItem//хоп а кто е�
 		unsigned int id;
         DataBasePrototype* d;
 	public:
-        tyristManualQListWidgetItem(unsigned int _id, DataBasePrototype* _d) {
+        tyristManualQListWidgetItem(id_type _id, DataBasePrototype* _d) {
             id = _id;
             d = _d;
             update_text();
+        }
+
+        tyristManualQListWidgetItem(id_type _id, DataBasePrototype* _d, QString _text) {
+            id = _id;
+            d = _d;
+            this->setText(_text);
         }
 
 		id_type get_id() {

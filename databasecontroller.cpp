@@ -6,20 +6,16 @@
 
 #include <QDebug>
 
-const static QString
-commandOutputStreamName = "\\\\.\\pipe\\commandInputPipe",
-dataInputStreamName = "\\\\.\\pipe\\dataOutputPipe",
-dataOutputStreamName = "\\\\.\\pipe\\dataInputPipe"
-;
+#include <config_pipe_naming.h>
 
 DataBaseController::DataBaseController() {
     bool fullConnect = true, hasConnectedStream = false;
     int poputok = 0;
     bool commandOutConnected = false, dataInputConnected = false, dataOutputConnected = false;
     do {
-        if (!commandOutConnected) commandOutConnected = commandOutputStream.open(commandOutputStreamName, DataStream::out);
-        if (!dataInputConnected) dataInputConnected = dataInputStream.open(dataInputStreamName, DataStream::in);
-        if (!dataOutputConnected) dataOutputConnected = dataOutputStream.open(dataOutputStreamName, DataStream::out);
+        if (!commandOutConnected) commandOutConnected = commandOutputStream.open(clientCommandOutputPipeName, DataStream::out);
+        if (!dataInputConnected) dataInputConnected = dataInputStream.open(clientDataInputPipeName, DataStream::in);
+        if (!dataOutputConnected) dataOutputConnected = dataOutputStream.open(clientDataOutputPipeName, DataStream::out);
 
         fullConnect = commandOutConnected && dataInputConnected && dataOutputConnected;
         hasConnectedStream = commandOutConnected || dataInputConnected || dataOutputConnected;

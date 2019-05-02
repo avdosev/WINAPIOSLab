@@ -3,11 +3,15 @@
 
 #include <databaseprototype.h>
 #include <pipestream.h>
+#include <thread.h>
+#include <QObject>
 
-class DataBaseController : public DataBasePrototype
+class DataBaseController : public QObject, public DataBasePrototype
 {
+        Q_OBJECT
     private:
-        mutable PipeStream commandOutputStream, dataInputStream, dataOutputStream;
+        mutable PipeStream commandOutputStream, dataInputStream, dataOutputStream, signalInputStream;
+        Thread chekingSignal;
     public:
         DataBaseController();
         ~DataBaseController();
@@ -22,6 +26,10 @@ class DataBaseController : public DataBasePrototype
         bool load(QString filename);
         void clear();
         bool isModidfied() const;
+    signals:
+        void update_signal(id_type);
+        void append_signal(id_type);
+
 };
 
 #endif // DATABASECONTROLLER_H

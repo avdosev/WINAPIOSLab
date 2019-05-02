@@ -3,6 +3,7 @@
 #include <QDebug>
 
 #include <pipestream.h>
+#include <config_pipe_naming.h>
 
 Server::Server() : running(false)
 {
@@ -12,15 +13,13 @@ Server::Server() : running(false)
 int Server::exec() {
     qDebug() << "STARTING THE SERVER";
 
-    QString dataInputPipeName = "\\\\.\\pipe\\dataInputPipe",
-            dataOutputPipeName = "\\\\.\\pipe\\dataOutputPipe",
-            commandInputPipeName = "\\\\.\\pipe\\commandInputPipe";
+
 
     PipeStream dataInputPipe, dataOutputPipe, commandInputPipe;
 
-    if (!dataInputPipe.open(dataInputPipeName, DataStream::create | DataStream::in) ||
-            !dataOutputPipe.open(dataOutputPipeName, DataStream::create | DataStream::out) ||
-            !commandInputPipe.open(commandInputPipeName, DataStream::create | DataStream::in))
+    if (!dataInputPipe.open(serverDataInputPipeName, DataStream::create | DataStream::in) ||
+            !dataOutputPipe.open(serverDataOutputPipeName, DataStream::create | DataStream::out) ||
+            !commandInputPipe.open(serverCommandInputPipeName, DataStream::create | DataStream::in))
     {
         qCritical() << "Couldn't create pipe";
         return -1;
@@ -78,7 +77,8 @@ bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &out
                 break;
             }
             case ServerCommand::compare_two_records: {
-                qDebug() << "compare two record";
+                // qDebug() << "compare two record";
+                // как бы да, но нет
                 id_type first, second;
                 input >> first >> second;
                 output << db.compareRecordsByID(first, second);
@@ -87,11 +87,9 @@ bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &out
             case ServerCommand::records: {
                 qDebug() << "records";
                 auto recs = db.records();
-                qDebug() << "size" << recs.size() << "\nwith items";
                 output << recs.size();
                 for (TyristManual item : recs) {
                     output << item;
-                    qDebug() << "item: " << item.id;
 
                 }
                 break;
@@ -121,10 +119,10 @@ bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &out
                 break;
             }
             case ServerCommand::is_modified: {
+                output << db.isModidfied();
                 break;
             }
             case ServerCommand::end_connection: {
-                output << db.isModidfied();
                 return false;
             }
             default: {
