@@ -16,24 +16,24 @@ class MainWindow : public QMainWindow
 
 	public:
         explicit MainWindow(QWidget *parent = nullptr);
+        ~MainWindow();
 
         TyristManual getDataFromUi();
 		void loadDataToUi(const TyristManual & import);
+        tyristManualQListWidgetItem* getCurrentItem();
 
 		void updateBrowserRecords();
 
 		bool hasAcceptableInput();
 
-        void addRecord(const TyristManual&, bool setCurrent = true);
+        void addRecordToDatabase(const TyristManual & import);
 
-        id_type addRecordToDatabase(const TyristManual & import);
+    public slots:
+        void addRecordToUi(id_type id);
+        void updateRecordByID(id_type id);
+        void removeRecordFromUiByID(id_type);
+        void clearBrowser();
 
-        void addRecordToUi(id_type id, QString text, bool setCurrent = true);
-        void addRecordToUi(id_type id, bool setCurrent = true);
-
-        tyristManualQListWidgetItem* getCurrentItem();
-
-		~MainWindow();
 
 	private slots:
 
@@ -56,6 +56,7 @@ class MainWindow : public QMainWindow
     private:
 		Ui::MainWindow *ui;
         DataBaseController records;
+        QMap <id_type, tyristManualQListWidgetItem*> browserWidgetItems;
 };
 
 #endif // MAINWINDOW_H

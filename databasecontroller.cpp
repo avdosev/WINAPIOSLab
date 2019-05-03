@@ -5,25 +5,36 @@
 #include <exception>
 
 #include <QDebug>
+#include <QThread>
 
 #include <config_pipe_naming.h>
 
 DataBaseController::DataBaseController() {
     bool fullConnect = true, hasConnectedStream = false;
     int poputok = 0;
-    bool commandOutConnected = false, dataInputConnected = false, dataOutputConnected = false;
+    bool commandOutConnected = false, dataInputConnected = false, dataOutputConnected = false,
+            signalInputConnected = false;
     do {
         if (!commandOutConnected) commandOutConnected = commandOutputStream.open(clientCommandOutputPipeName, DataStream::out);
         if (!dataInputConnected) dataInputConnected = dataInputStream.open(clientDataInputPipeName, DataStream::in);
         if (!dataOutputConnected) dataOutputConnected = dataOutputStream.open(clientDataOutputPipeName, DataStream::out);
-
-        fullConnect = commandOutConnected && dataInputConnected && dataOutputConnected;
-        hasConnectedStream = commandOutConnected || dataInputConnected || dataOutputConnected;
+        if (!signalInputConnected) signalInputConnected = signalInputStream.open(clientSignalsInputPipeName, DataStream::in | DataStream::ate);
+        fullConnect = commandOutConnected && dataInputConnected && dataOutputConnected && signalInputConnected;
+        hasConnectedStream = commandOutConnected || dataInputConnected || dataOutputConnected || signalInputConnected;
         poputok++;
     } while (!fullConnect && hasConnectedStream && poputok < 10);
+
     if (!fullConnect) {
         throw std::runtime_error("error connected to server");
     }
+
+    checkerThread = new QThread();
+    checker = new ServerSignalChecker(this, &signalInputStream);
+    checker->moveToThread(checkerThread);
+    connect(checkerThread, SIGNAL(finished()),  checkerThread, SLOT(deleteLater()));
+    connect(checkerThread, SIGNAL(started()), checker, SLOT(start()));
+    connect(this, SIGNAL(checking_next_signal()), checker, SLOT(start()));
+    checkerThread->start();
 }
 
 DataBaseController::~DataBaseController() {
@@ -33,6 +44,46 @@ DataBaseController::~DataBaseController() {
     }
 }
 
+DataBaseController::ServerSignalChecker::ServerSignalChecker(QObject* parent, PipeStream* input) {
+    this->setParent(parent);
+    signalInputStream = input;
+}
+
+void DataBaseController::ServerSignalChecker::start() {
+    ClientCommand command;
+    *signalInputStream >> command;
+    emit check_command(command);
+}
+
+void DataBaseController::serverSignaled(ClientCommand command) {
+    id_type id;
+
+    switch (command) {
+        case ClientCommand::append:
+            signalInputStream >> id;
+            emit append_signal(id);
+            break;
+        case ClientCommand::update:
+            signalInputStream >> id;
+            emit update_signal(id);
+            break;
+        case ClientCommand::remove:
+            signalInputStream >> id;
+            emit remove_signal(id);
+            break;
+        case ClientCommand::clear:
+            emit clear_signal();
+            break;
+        case ClientCommand::end_connection:
+            emit server_stop_signal();
+        default:
+            qDebug() << "сервак посылает странные сигналы";
+    }
+    if (command != ClientCommand::end_connection)
+        emit checking_next_signal();
+}
+
+
 int DataBaseController::count() const {
     int count;
     commandOutputStream << ServerCommand::count;
@@ -40,12 +91,9 @@ int DataBaseController::count() const {
     return count;
 }
 
-id_type DataBaseController::append(TyristManual record) {
+void DataBaseController::append(TyristManual record) {
     commandOutputStream << ServerCommand::append;
     dataOutputStream << record;
-    id_type id;
-    dataInputStream >> id;
-    return id;
 }
 
 void DataBaseController::remove(id_type id) {

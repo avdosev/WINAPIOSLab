@@ -39,7 +39,6 @@ HEADERS += \
     tyristmanual.h \
     mestootduxavalidator.h \
     tyristmanualqlistwidgetitem.h \
-    databaseprototype.h \
     databasecontroller.h \
     filestream.h \
     datastream.h \

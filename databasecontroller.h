@@ -1,22 +1,24 @@
 #ifndef DATABASECONTROLLER_H
 #define DATABASECONTROLLER_H
 
-#include <databaseprototype.h>
+#include <tyristmanual.h>
 #include <pipestream.h>
-#include <thread.h>
 #include <QObject>
+#include <server_command.h>
 
-class DataBaseController : public QObject, public DataBasePrototype
+class DataBaseController : public QObject
 {
         Q_OBJECT
     private:
+        class ServerSignalChecker;
         mutable PipeStream commandOutputStream, dataInputStream, dataOutputStream, signalInputStream;
-        Thread chekingSignal;
+        QThread* checkerThread;
+        ServerSignalChecker* checker;
     public:
         DataBaseController();
         ~DataBaseController();
         int count() const;
-        id_type append(TyristManual record);
+        void append(TyristManual record);
         void remove(id_type id);
         void update(id_type record_id, TyristManual record);
         int compareRecordsByID(id_type, id_type);
@@ -29,7 +31,28 @@ class DataBaseController : public QObject, public DataBasePrototype
     signals:
         void update_signal(id_type);
         void append_signal(id_type);
+        void remove_signal(id_type);
+        void clear_signal();
+        void server_stop_signal();
 
+        // этот сигнал требуется для чекера чтобы мы могли требовать считывать тогда когда как бы этого захотим
+        void checking_next_signal();
+    private slots:
+        void serverSignaled(ClientCommand);
 };
+
+class DataBaseController::ServerSignalChecker : public QObject
+{
+        Q_OBJECT
+    private:
+        PipeStream* signalInputStream;
+    public:
+        explicit ServerSignalChecker(QObject*, PipeStream*);
+    public slots:
+        void start();
+    signals:
+        void check_command(ClientCommand);
+};
+
 
 #endif // DATABASECONTROLLER_H
