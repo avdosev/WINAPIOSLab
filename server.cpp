@@ -5,6 +5,8 @@
 #include <pipestream.h>
 #include <config_pipe_naming.h>
 
+PipeStream Server::signalOutputPipe(serverSignalsOutputPipeName, DataStream::create | DataStream::out);
+
 Server::Server() : running(false)
 {
 
@@ -19,7 +21,8 @@ int Server::exec() {
 
     if (!dataInputPipe.open(serverDataInputPipeName, DataStream::create | DataStream::in) ||
             !dataOutputPipe.open(serverDataOutputPipeName, DataStream::create | DataStream::out) ||
-            !commandInputPipe.open(serverCommandInputPipeName, DataStream::create | DataStream::in))
+            !commandInputPipe.open(serverCommandInputPipeName, DataStream::create | DataStream::in) ||
+            !signalOutputPipe.is_open())
     {
         qCritical() << "Couldn't create pipe";
         return -1;
@@ -58,7 +61,7 @@ bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &out
                 qDebug() << "append";
                 TyristManual value;
                 input >> value;
-                output << db.append(value);
+                signalOutputPipe << ClientCommand::append << db.append(value);
                 break;
             }
             case ServerCommand::remove: {
@@ -66,6 +69,7 @@ bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &out
                 id_type id;
                 input >> id;
                 db.remove(id);
+                signalOutputPipe << ClientCommand::remove << id;
                 break;
             }
             case ServerCommand::update: {
@@ -74,6 +78,7 @@ bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &out
                 TyristManual value;
                 input >> id >> value;
                 db.update(id, value);
+                signalOutputPipe << ClientCommand::update << id;
                 break;
             }
             case ServerCommand::compare_two_records: {
@@ -90,7 +95,6 @@ bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &out
                 output << recs.size();
                 for (TyristManual item : recs) {
                     output << item;
-
                 }
                 break;
             }
@@ -115,6 +119,7 @@ bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &out
             }
             case ServerCommand::clear: {
                 qDebug() << "clear";
+                signalOutputPipe << ClientCommand::clear;
                 db.clear();
                 break;
             }

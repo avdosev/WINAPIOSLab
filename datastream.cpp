@@ -3,9 +3,9 @@
 #include <windows.h>
 #include <QDebug>
 
-DataStream::DataStream()
+DataStream::DataStream() : file(NULL)
 {
-    file = NULL;
+
 }
 
 DataStream::~DataStream() {

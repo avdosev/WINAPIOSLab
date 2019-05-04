@@ -4,6 +4,14 @@
 #include <filestream.h>
 #include <QDebug>
 
+PipeStream::PipeStream() {
+
+}
+
+PipeStream::PipeStream(QString filename, uint32_t flags) {
+    open(filename, flags);
+}
+
 bool PipeStream::open(QString filename, uint32_t flags) {
     DWORD openMode = 0, pipeMode = 0;
     DWORD bufferSizeIn = 1024, bufferSizeOut = 1024, maxInstances = 254, timeOut = 5000;

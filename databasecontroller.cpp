@@ -8,7 +8,7 @@
 #include <QThread>
 
 #include <config_pipe_naming.h>
-
+Q_DECLARE_METATYPE(ClientCommand)
 DataBaseController::DataBaseController() {
     bool fullConnect = true, hasConnectedStream = false;
     int poputok = 0;
@@ -27,13 +27,14 @@ DataBaseController::DataBaseController() {
     if (!fullConnect) {
         throw std::runtime_error("error connected to server");
     }
-
+    qRegisterMetaType <ClientCommand> ("ClientCommand");
     checkerThread = new QThread();
-    checker = new ServerSignalChecker(this, &signalInputStream);
+    checker = new ServerSignalChecker(signalInputStream);
     checker->moveToThread(checkerThread);
     connect(checkerThread, SIGNAL(finished()),  checkerThread, SLOT(deleteLater()));
     connect(checkerThread, SIGNAL(started()), checker, SLOT(start()));
     connect(this, SIGNAL(checking_next_signal()), checker, SLOT(start()));
+    connect(checker, &ServerSignalChecker::check_command, this, &DataBaseController::serverSignaled);
     checkerThread->start();
 }
 
@@ -44,20 +45,18 @@ DataBaseController::~DataBaseController() {
     }
 }
 
-DataBaseController::ServerSignalChecker::ServerSignalChecker(QObject* parent, PipeStream* input) {
-    this->setParent(parent);
-    signalInputStream = input;
+DataBaseController::ServerSignalChecker::ServerSignalChecker(PipeStream& input) : signalInputStream(input) {
+
 }
 
 void DataBaseController::ServerSignalChecker::start() {
     ClientCommand command;
-    *signalInputStream >> command;
+    signalInputStream >> command;
     emit check_command(command);
 }
 
 void DataBaseController::serverSignaled(ClientCommand command) {
     id_type id;
-
     switch (command) {
         case ClientCommand::append:
             signalInputStream >> id;

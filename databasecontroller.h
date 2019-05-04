@@ -45,9 +45,9 @@ class DataBaseController::ServerSignalChecker : public QObject
 {
         Q_OBJECT
     private:
-        PipeStream* signalInputStream;
+        PipeStream& signalInputStream;
     public:
-        explicit ServerSignalChecker(QObject*, PipeStream*);
+        explicit ServerSignalChecker(PipeStream& input);
     public slots:
         void start();
     signals:

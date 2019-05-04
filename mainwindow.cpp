@@ -85,6 +85,7 @@ void MainWindow::addRecordToUi(id_type id) {
     tyristManualQListWidgetItem* temp = new tyristManualQListWidgetItem(id, &records);
     ui->browserRecord->addItem(temp);
     ui->browserRecord->setCurrentItem(temp);
+    browserWidgetItems.insert(id, temp);
 }
 
 void MainWindow::updateRecordByID(id_type id) {
@@ -94,15 +95,16 @@ void MainWindow::updateRecordByID(id_type id) {
 
 void MainWindow::removeRecordFromUiByID(id_type id) {
     if (browserWidgetItems.contains(id)) {
-        delete browserWidgetItems[id];
+        // я не ебу почему, но так не вылетает
+        // должно быть наоборот
         browserWidgetItems.remove(id);
+        delete browserWidgetItems[id];
     }
 }
 
 void MainWindow::clearBrowser() {
     browserWidgetItems.clear();
     ui->browserRecord->clear();
-
 }
 
 void MainWindow::on_save_clicked()
@@ -153,7 +155,7 @@ void MainWindow::on_strana_currentRowChanged(int currentRow)
 
 void MainWindow::on_fill_clicked()
 {
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 15; i++) {
         addRecordToDatabase(TyristManual::createRandomObject());
     }
     //updateBrowserRecords();
