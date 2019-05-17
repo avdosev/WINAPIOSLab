@@ -85,7 +85,7 @@ void MainWindow::addRecordToUi(id_type id) {
     tyristManualQListWidgetItem* temp = new tyristManualQListWidgetItem(id, &records);
     ui->browserRecord->addItem(temp);
     ui->browserRecord->setCurrentItem(temp);
-    browserWidgetItems.insert(id, temp);
+    browserWidgetItems.insert(std::make_pair(id, temp));
 }
 
 void MainWindow::updateRecordByID(id_type id) {
@@ -94,11 +94,10 @@ void MainWindow::updateRecordByID(id_type id) {
 }
 
 void MainWindow::removeRecordFromUiByID(id_type id) {
-    if (browserWidgetItems.contains(id)) {
-        // я не ебу почему, но так не вылетает
-        // должно быть наоборот
-        browserWidgetItems.remove(id);
-        delete browserWidgetItems[id];
+    auto it = browserWidgetItems.find(id);
+    if (it != browserWidgetItems.end()) {
+        delete it->second;
+        browserWidgetItems.erase(it);
     }
 }
 
@@ -111,6 +110,7 @@ void MainWindow::on_save_clicked()
 {
     if (hasAcceptableInput()) {
         auto currentItem = getCurrentItem();
+        qDebug() << (currentItem != nullptr);
         if (currentItem != nullptr) {
             id_type id = currentItem->get_id();
             auto temp = getDataFromUi();

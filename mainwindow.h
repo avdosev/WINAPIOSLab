@@ -5,6 +5,7 @@
 #include "tyristmanual.h"
 #include "databasecontroller.h"
 #include "tyristmanualqlistwidgetitem.h"
+#include <map>
 
 namespace Ui {
 	class MainWindow;
@@ -56,7 +57,7 @@ class MainWindow : public QMainWindow
     private:
 		Ui::MainWindow *ui;
         DataBaseController records;
-        QMap <id_type, tyristManualQListWidgetItem*> browserWidgetItems;
+        std::map <id_type, tyristManualQListWidgetItem*> browserWidgetItems;
 };
 
 #endif // MAINWINDOW_H
