@@ -132,7 +132,6 @@ void MainWindow::on_delet_clicked()
     auto rec = getCurrentItem();
     if (rec != nullptr) {
         records.remove(rec->get_id());
-        delete rec;
     }
 }
 
