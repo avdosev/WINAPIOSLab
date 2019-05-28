@@ -1,28 +1,25 @@
-#include "server.h"
+#include "serverworker.h"
 
 #include <QDebug>
 
 #include <pipestream.h>
 #include <config_pipe_naming.h>
 
-PipeStream Server::signalOutputPipe(serverSignalsOutputPipeName, DataStream::create | DataStream::out);
-
-Server::Server() : running(false)
+ServerWorker::ServerWorker(PipeStream& signalPipe, DataBase& database) : running(false), signalOutputPipe(signalPipe), db(database)
 {
 
 }
 
-int Server::exec() {
+int ServerWorker::exec(clientID_t id) {
     qDebug() << "STARTING THE SERVER";
 
 
 
     PipeStream dataInputPipe, dataOutputPipe, commandInputPipe;
 
-    if (!dataInputPipe.open(serverDataInputPipeName, DataStream::create | DataStream::in) ||
-            !dataOutputPipe.open(serverDataOutputPipeName, DataStream::create | DataStream::out) ||
-            !commandInputPipe.open(serverCommandInputPipeName, DataStream::create | DataStream::in) ||
-            !signalOutputPipe.is_open())
+    if (!dataInputPipe.open(serverDataInputPipeName + QString::number(id), DataStream::create | DataStream::in) ||
+            !dataOutputPipe.open(serverDataOutputPipeName + QString::number(id), DataStream::create | DataStream::out) ||
+            !commandInputPipe.open(serverCommandInputPipeName + QString::number(id), DataStream::create | DataStream::in))
     {
         qCritical() << "Couldn't create pipe";
         return -1;
@@ -49,7 +46,7 @@ int Server::exec() {
 }
 
 
-bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &output) {
+bool ServerWorker::doCommand(ServerCommand command, PipeStream &input, PipeStream &output) {
     try {
         switch (command) {
             case ServerCommand::count: {
@@ -139,4 +136,8 @@ bool Server::doCommand(ServerCommand command, PipeStream &input, PipeStream &out
         return false;
     }
     return true;
+}
+
+void ServerWorker::quit() {
+    signalOutputPipe << ClientCommand::end_connection;
 }

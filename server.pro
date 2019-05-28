@@ -23,7 +23,7 @@ SOURCES += \
     thread.cpp \
     timer.cpp \
     tyristmanual.cpp \
-    server.cpp
+    serverworker.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -40,5 +40,5 @@ HEADERS += \
     timer.h \
     tyristmanual.h \
     databaseprototype.h \
-    server.h \
-    config_pipe_naming.h
+    config_pipe_naming.h \
+    serverworker.h

@@ -1,5 +1,4 @@
-#ifndef SERVER_H
-#define SERVER_H
+#pragma once
 
 #include <database.h>
 
@@ -7,17 +6,17 @@
 
 #include <pipestream.h>
 
-class Server
+using clientID_t = unsigned;
+
+class ServerWorker
 {
     private:
-        static PipeStream signalOutputPipe;
-        DataBase db;
+        PipeStream& signalOutputPipe;
+        DataBase& db;
         bool running;
     public:
-        Server();
+        ServerWorker(PipeStream& signalPipe, DataBase& database);
         bool doCommand(ServerCommand command, PipeStream &,PipeStream &);
-        int exec();
+        int exec(clientID_t);
         void quit();
 };
-
-#endif // SERVER_H
