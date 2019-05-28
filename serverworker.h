@@ -15,6 +15,7 @@ class ServerWorker
         DataBase& db;
         bool running;
     public:
+        ServerWorker(ServerWorker&& bibo): signalOutputPipe(bibo.signalOutputPipe), db(bibo.db), running(bibo.running) {}
         ServerWorker(PipeStream& signalPipe, DataBase& database);
         bool doCommand(ServerCommand command, PipeStream &,PipeStream &);
         int exec(clientID_t);

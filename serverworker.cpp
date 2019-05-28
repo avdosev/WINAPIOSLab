@@ -11,7 +11,7 @@ ServerWorker::ServerWorker(PipeStream& signalPipe, DataBase& database) : running
 }
 
 int ServerWorker::exec(clientID_t id) {
-    qDebug() << "STARTING THE SERVER";
+    qDebug() << "STARTING THE SERVER WORKER";
 
 
 
@@ -40,7 +40,7 @@ int ServerWorker::exec(clientID_t id) {
         running = this->doCommand(c, dataInputPipe, dataOutputPipe);
     } while (running);
 
-    qDebug() << "########## FINISHING THE SERVER ##########" << endl << endl;
+    qDebug() << "FINISHING THE SERVER WORKER" << endl << endl;
 
     return 0;
 }
@@ -139,5 +139,5 @@ bool ServerWorker::doCommand(ServerCommand command, PipeStream &input, PipeStrea
 }
 
 void ServerWorker::quit() {
-    signalOutputPipe << ClientCommand::end_connection;
+    running = false;
 }

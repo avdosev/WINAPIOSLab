@@ -17,17 +17,18 @@ int main(int argc, char *argv[])
 {
     DataBase db;
     PipeStream signalOutputPipe(serverSignalsOutputPipeName, DataStream::create | DataStream::out);
-    std::map<clientID_t, ServerWorker> workers;
+    map<clientID_t, ServerWorker> workers;
     bool running = true;
 
     Thread connectLoop;
-    connectLoop.start( [&running, signalOutputPipe](){
+    connectLoop.start( [&](){
         PipeStream connectPipe(ConnectPipeName, DataStream::create | DataStream::out);
         clientID_t clientID = 0;
         while (running) {
             connectPipe.waitingClient();
             clientID++;
-            ServerWorker swork(signalOutputPipe, db);
+            workers.emplace(make_pair(clientID, std::move(ServerWorker(signalOutputPipe, db)))); // TODO FIX
+            auto& swork = workers[clientID];
             Thread worker;
             worker.start([clientID, &swork](){
                 auto resCode = swork.exec(clientID);
@@ -37,7 +38,20 @@ int main(int argc, char *argv[])
         }
     });
 
-    running = false;
-    signalOutputPipe << ClientCommand::end_connection;
+    char puk; // смысловая переменная
 
+    // ждемс
+    cout << "Для продолжения работы программы нажмите любую клавишу..." << endl;
+    cin.get();
+
+    // press F to pay respect
+    running = false;
+    if (connectLoop.running()) {
+        connectLoop.quit(); // в бан
+    }
+    for (auto& item: workers) {
+        item.second.quit();
+    }
+    signalOutputPipe << ClientCommand::end_connection;
+    return 0;
 }

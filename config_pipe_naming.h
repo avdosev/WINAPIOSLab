@@ -7,7 +7,7 @@ const QString
 serverDataInputPipeName = "\\\\.\\pipe\\dataInputPipe",
 serverDataOutputPipeName = "\\\\.\\pipe\\dataOutputPipe",
 serverCommandInputPipeName = "\\\\.\\pipe\\commandInputPipe",
-serverSignalsOutputPipeName = "\\\\.\\pipe\\signalsOutputPipe",
+serverSignalsOutputPipeName = "\\\\.\\pipe\\signalsOutputPipe"
 ;
 
 const QString
