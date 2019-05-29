@@ -16,32 +16,36 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     DataBase db;
-    PipeStream signalOutputPipe(serverSignalsOutputPipeName, DataStream::create | DataStream::out);
     map<clientID_t, ServerWorker> workers;
+    map<clientID_t, std::shared_ptr<PipeStream>> pipes;
     bool running = true;
 
     Thread connectLoop;
     connectLoop.start( [&](){
-        PipeStream connectPipe(ConnectPipeName, DataStream::create | DataStream::out);
         clientID_t clientID = 0;
         while (running) {
+            PipeStream connectPipe(ConnectPipeName, DataStream::create | DataStream::out);
             connectPipe.waitingClient();
             clientID++;
-            workers.emplace(make_pair(clientID, std::move(ServerWorker(signalOutputPipe, db)))); // TODO FIX
+            pipes.insert(make_pair(clientID, make_shared<PipeStream>(serverSignalsOutputPipeName+QString::number(clientID), DataStream::create | DataStream::out)));
+            workers.emplace(make_pair(clientID, ServerWorker(pipes, db, clientID)));
             auto& swork = workers[clientID];
             Thread worker;
-            worker.start([clientID, &swork](){
-                auto resCode = swork.exec(clientID);
+            worker.start([&swork](){
+                auto resCode = swork.exec();
                 qDebug() << "server worker end with code " << resCode;
             });
+            qDebug() << "client id: " << clientID;
+            Thread::sleep(100);
             connectPipe << clientID;
+            connectPipe.close();
         }
     });
 
     char puk; // смысловая переменная
 
     // ждемс
-    cout << "Для продолжения работы программы нажмите любую клавишу..." << endl;
+    cout << "To continue the program, press any key..." << endl;
     cin.get();
 
     // press F to pay respect
@@ -52,6 +56,7 @@ int main(int argc, char *argv[])
     for (auto& item: workers) {
         item.second.quit();
     }
-    signalOutputPipe << ClientCommand::end_connection;
+    for (auto item: pipes)
+        *item.second << ClientCommand::end_connection;
     return 0;
 }

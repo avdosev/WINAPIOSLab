@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
     try {
         MainWindow w;
         w.show();
+        w.connect(&w, &MainWindow::destroyed, &a, &QApplication::quit);
         return a.exec();
     } catch (std::exception error) {
         qDebug() << error.what();

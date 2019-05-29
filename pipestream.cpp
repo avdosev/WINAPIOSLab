@@ -36,6 +36,7 @@ bool PipeStream::open(QString filename, uint32_t flags) {
                          bufferSizeOut,
                          timeOut,
                          nullptr);
+        type = 2;
     } else {
         // игра классов
         FileStream game;
@@ -44,6 +45,7 @@ bool PipeStream::open(QString filename, uint32_t flags) {
         //this->file = next_game.file;
         file = game.getHandle();
         game.setHandle(NULL);
+        type = 1;
     }
 
 
@@ -58,4 +60,13 @@ bool PipeStream::open(QString filename, uint32_t flags) {
 
 bool PipeStream::waitingClient() {
     return ConnectNamedPipe(file, nullptr);
+}
+
+void PipeStream::close() {
+    if (type < 2) {
+        CloseHandle(file);
+    } else {
+        DisconnectNamedPipe(file);
+    }
+    file = NULL;
 }

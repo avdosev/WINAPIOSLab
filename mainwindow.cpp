@@ -35,6 +35,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&records, &DataBaseController::append_signal, this, &MainWindow::addRecordToUi);
     connect(&records, &DataBaseController::remove_signal, this, &MainWindow::removeRecordFromUiByID);
     connect(&records, &DataBaseController::clear_signal , this, &MainWindow::clearBrowser);
+    connect(&records, &DataBaseController::server_stop_signal, [this](){
+       QMessageBox::critical(nullptr, "Ошибка подключения к серверу", "К сожалению приложение не может работать");
+       this->close();
+       this->~MainWindow();
+    });
     //updateBrowserRecords();
 }
 

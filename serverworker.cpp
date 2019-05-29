@@ -5,21 +5,23 @@
 #include <pipestream.h>
 #include <config_pipe_naming.h>
 
-ServerWorker::ServerWorker(PipeStream& signalPipe, DataBase& database) : running(false), signalOutputPipe(signalPipe), db(database)
+ServerWorker::ServerWorker() : pipes(nullptr), db(nullptr) {
+
+}
+
+ServerWorker::ServerWorker(pipes_t& signalPipe, DataBase& database, clientID_t id) : pipes(&signalPipe), db(&database), clientid(id)
 {
 
 }
 
-int ServerWorker::exec(clientID_t id) {
-    qDebug() << "STARTING THE SERVER WORKER";
-
-
+int ServerWorker::exec() {
+    qDebug() << "STARTING THE SERVER WORKER with id " << clientid;
 
     PipeStream dataInputPipe, dataOutputPipe, commandInputPipe;
 
-    if (!dataInputPipe.open(serverDataInputPipeName + QString::number(id), DataStream::create | DataStream::in) ||
-            !dataOutputPipe.open(serverDataOutputPipeName + QString::number(id), DataStream::create | DataStream::out) ||
-            !commandInputPipe.open(serverCommandInputPipeName + QString::number(id), DataStream::create | DataStream::in))
+    if (!dataInputPipe.open(serverDataInputPipeName + QString::number(clientid), DataStream::create | DataStream::in) ||
+            !dataOutputPipe.open(serverDataOutputPipeName + QString::number(clientid), DataStream::create | DataStream::out) ||
+            !commandInputPipe.open(serverCommandInputPipeName + QString::number(clientid), DataStream::create | DataStream::in))
     {
         qCritical() << "Couldn't create pipe";
         return -1;
@@ -41,7 +43,9 @@ int ServerWorker::exec(clientID_t id) {
     } while (running);
 
     qDebug() << "FINISHING THE SERVER WORKER" << endl << endl;
-
+    dataInputPipe.close();
+    dataOutputPipe.close();
+    commandInputPipe.close();
     return 0;
 }
 
@@ -51,22 +55,23 @@ bool ServerWorker::doCommand(ServerCommand command, PipeStream &input, PipeStrea
         switch (command) {
             case ServerCommand::count: {
                 qDebug() << "count";
-                output << db.count();
+                output << db->count();
                 break;
             }
             case ServerCommand::append: {
                 qDebug() << "append";
                 TyristManual value;
                 input >> value;
-                signalOutputPipe << ClientCommand::append << db.append(value);
+                auto id = db->append(value);
+                for (auto item: *pipes) *item.second << ClientCommand::append << id;
                 break;
             }
             case ServerCommand::remove: {
                 qDebug() << "remove";
                 id_type id;
                 input >> id;
-                db.remove(id);
-                signalOutputPipe << ClientCommand::remove << id;
+                db->remove(id);
+                for (auto item: *pipes) *item.second << ClientCommand::remove << id;
                 break;
             }
             case ServerCommand::update: {
@@ -74,8 +79,8 @@ bool ServerWorker::doCommand(ServerCommand command, PipeStream &input, PipeStrea
                 id_type id;
                 TyristManual value;
                 input >> id >> value;
-                db.update(id, value);
-                signalOutputPipe << ClientCommand::update << id;
+                db->update(id, value);
+                for (auto item: *pipes) *item.second << ClientCommand::update << id;
                 break;
             }
             case ServerCommand::compare_two_records: {
@@ -83,12 +88,12 @@ bool ServerWorker::doCommand(ServerCommand command, PipeStream &input, PipeStrea
                 // как бы да, но нет
                 id_type first, second;
                 input >> first >> second;
-                output << db.compareRecordsByID(first, second);
+                output << db->compareRecordsByID(first, second);
                 break;
             }
             case ServerCommand::records: {
                 qDebug() << "records";
-                auto recs = db.records();
+                auto recs = db->records();
                 output << recs.size();
                 for (TyristManual item : recs) {
                     output << item;
@@ -99,32 +104,33 @@ bool ServerWorker::doCommand(ServerCommand command, PipeStream &input, PipeStrea
                 qDebug() << "record";
                 id_type id;
                 input >> id;
-                output << db.record(id);
+                output << db->record(id);
                 break;
             }
             case ServerCommand::save: {
                 QString filename;
                 input >> filename;
-                output << db.save(filename);
+                output << db->save(filename);
                 break;
             }
             case ServerCommand::load: {
                 QString filename;
                 input >> filename;
-                output << db.load(filename);
+                output << db->load(filename);
                 break;
             }
             case ServerCommand::clear: {
                 qDebug() << "clear";
-                signalOutputPipe << ClientCommand::clear;
-                db.clear();
+                for (auto item: *pipes) *item.second << ClientCommand::clear;
+                db->clear();
                 break;
             }
             case ServerCommand::is_modified: {
-                output << db.isModidfied();
+                output << db->isModidfied();
                 break;
             }
             case ServerCommand::end_connection: {
+                pipes->erase(clientid);
                 return false;
             }
             default: {

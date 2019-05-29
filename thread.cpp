@@ -11,6 +11,10 @@ Thread::~Thread()  {
 
 }
 
+void Thread::sleep(unsigned mls) {
+    Sleep(mls);
+}
+
 unsigned WINAPI Thread::runThread(LPVOID args) {
 //    auto thrd = reinterpret_cast<const Thread*>(args);
 //    thrd->run();

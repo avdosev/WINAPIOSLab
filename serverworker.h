@@ -6,18 +6,20 @@
 
 #include <pipestream.h>
 
-using clientID_t = unsigned;
+#include <map>
 
 class ServerWorker
 {
     private:
-        PipeStream& signalOutputPipe;
-        DataBase& db;
-        bool running;
+        using pipes_t = std::map<clientID_t, std::shared_ptr<PipeStream>>;
+        pipes_t* pipes;
+        DataBase* db;
+        clientID_t clientid;
+        bool running = false;
     public:
-        ServerWorker(ServerWorker&& bibo): signalOutputPipe(bibo.signalOutputPipe), db(bibo.db), running(bibo.running) {}
-        ServerWorker(PipeStream& signalPipe, DataBase& database);
+        ServerWorker();
+        ServerWorker(pipes_t& signalPipe, DataBase& database, clientID_t id);
         bool doCommand(ServerCommand command, PipeStream &,PipeStream &);
-        int exec(clientID_t);
+        int exec();
         void quit();
 };

@@ -24,6 +24,7 @@ class Thread/* : QObject*/
 //    public slots:
         void quit(); // сообщает потоку завершиться с кодом ноль
         void start(std::function<void()> func); // старт потока
+        static void sleep(unsigned);
 //    signals:
 //        void started() const; // сигнал испускаемый после старта потока
 //        void finished() const; // по окончании потока

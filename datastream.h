@@ -25,7 +25,7 @@ class DataStream
         DataStream();
         virtual ~DataStream();
         bool is_open();
-        void close();
+        virtual void close();
         bool eof();
         bool write(void* begin, Size_t size);
         bool read(void* begin, Size_t size);
