@@ -17,9 +17,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main_server.cpp \
     database.cpp \
-    datastream.cpp \
-    filestream.cpp \
-    pipestream.cpp \
+    stream/datastream.cpp \
+    stream/filestream.cpp \
+    stream/pipestream.cpp \
     thread.cpp \
     timer.cpp \
     tyristmanual.cpp \
@@ -32,13 +32,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     database.h \
-    datastream.h \
-    filestream.h \
-    pipestream.h \
+    stream/datastream.h \
+    stream/filestream.h \
+    stream/pipestream.h \
     server_command.h \
     thread.h \
     timer.h \
     tyristmanual.h \
     databaseprototype.h \
-    config_pipe_naming.h \
+    config/pipe_naming.h \
     serverworker.h

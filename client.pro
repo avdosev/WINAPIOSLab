@@ -29,9 +29,9 @@ SOURCES += \
     main_client.cpp \
     mestootduxavalidator.cpp \
     databasecontroller.cpp \
-    filestream.cpp \
-    datastream.cpp \
-    pipestream.cpp \
+    stream/filestream.cpp \
+    stream/datastream.cpp \
+    stream/pipestream.cpp \
     thread.cpp
 
 HEADERS += \
@@ -40,16 +40,12 @@ HEADERS += \
     mestootduxavalidator.h \
     tyristmanualqlistwidgetitem.h \
     databasecontroller.h \
-    filestream.h \
-    datastream.h \
-    pipestream.h \
+    stream/filestream.h \
+    stream/datastream.h \
+    stream/pipestream.h \
     server_command.h \
-    config_pipe_naming.h \
+    config/pipe_naming.h \
     thread.h
 
 FORMS += \
-        mainwindow.ui
-
-RESOURCES +=
-
-DISTFILES +=
+        ui/mainwindow.ui

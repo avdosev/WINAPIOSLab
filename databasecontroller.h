@@ -2,7 +2,7 @@
 #define DATABASECONTROLLER_H
 
 #include <tyristmanual.h>
-#include <pipestream.h>
+#include <stream/pipestream.h>
 #include <QObject>
 #include <server_command.h>
 

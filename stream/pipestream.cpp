@@ -1,7 +1,7 @@
 #include "pipestream.h"
 
 #include <winbase.h>
-#include <filestream.h>
+#include "filestream.h"
 #include <QDebug>
 
 PipeStream::PipeStream() {

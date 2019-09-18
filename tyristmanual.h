@@ -55,7 +55,7 @@ bool operator <= (const TyristManual& c1, const TyristManual& c2);
 bool operator == (const TyristManual& c1, const TyristManual& c2);
 bool operator != (const TyristManual& c1, const TyristManual& c2);
 
-#include <datastream.h>
+#include <stream/datastream.h>
 
 DataStream& operator << (DataStream&, TyristManual);
 DataStream& operator >> (DataStream&, TyristManual&);

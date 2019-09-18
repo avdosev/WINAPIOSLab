@@ -4,7 +4,7 @@
 
 #include <server_command.h>
 
-#include <pipestream.h>
+#include "stream/pipestream.h"
 
 #include <map>
 

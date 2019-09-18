@@ -7,8 +7,10 @@
 #include <QDebug>
 #include <QThread>
 
-#include <config_pipe_naming.h>
+#include "config/config_pipe_naming.h"
+
 Q_DECLARE_METATYPE(ClientCommand)
+
 DataBaseController::DataBaseController() {
     bool fullConnect = false;
     int poputok = 0;

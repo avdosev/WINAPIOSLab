@@ -1,6 +1,6 @@
 #pragma once
 
-#include <datastream.h>
+#include "datastream.h"
 
 class FileStream : public DataStream
 {

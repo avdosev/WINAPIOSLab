@@ -1,8 +1,8 @@
 #include <QCoreApplication>
 
-#include <config_pipe_naming.h>
+#include "config/pipe_naming.h"
 #include <database.h>
-#include <pipestream.h>
+#include "stream/pipestream.h"
 #include <serverworker.h>
 #include <thread.h>
 
