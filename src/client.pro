@@ -24,28 +24,28 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        mainwindow.cpp \
+    view/mainwindow.cpp \
     tyristmanual.cpp \
     main_client.cpp \
-    mestootduxavalidator.cpp \
+    services/validator/mestootduxavalidator.cpp \
     databasecontroller.cpp \
-    stream/filestream.cpp \
-    stream/datastream.cpp \
-    stream/pipestream.cpp \
-    thread.cpp
+    services/stream/filestream.cpp \
+    services/stream/datastream.cpp \
+    services/stream/pipestream.cpp \
+    services/thread/thread.cpp
 
 HEADERS += \
-        mainwindow.h \
+    view/mainwindow.h \
     tyristmanual.h \
-    mestootduxavalidator.h \
+    services/validator/mestootduxavalidator.h \
     tyristmanualqlistwidgetitem.h \
     databasecontroller.h \
-    stream/filestream.h \
-    stream/datastream.h \
-    stream/pipestream.h \
-    server_command.h \
-    config/pipe_naming.h \
-    thread.h
+    services/stream/filestream.h \
+    services/stream/datastream.h \
+    services/stream/pipestream.h \
+    services/thread/thread.h \
+    config/server_command.h \
+    config/pipe_naming.h
 
 FORMS += \
-        ui/mainwindow.ui
+    ui/mainwindow.ui

@@ -1,4 +1,3 @@
-#include "mainwindow.h"
 #include <QApplication>
 #include <QTime>
 #include <QDebug>
@@ -6,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "view/mainwindow.h"
 #include "database.h"
 
 

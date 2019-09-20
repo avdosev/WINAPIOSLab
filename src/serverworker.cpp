@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-#include "stream/pipestream.h"
+#include "services/stream/pipestream.h"
 #include "config/pipe_naming.h"
 
 ServerWorker::ServerWorker() : pipes(nullptr), db(nullptr) {

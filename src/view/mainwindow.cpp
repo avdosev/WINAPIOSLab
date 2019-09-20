@@ -1,13 +1,14 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "mestootduxavalidator.h"
-
-#include <tyristmanual.h>
-
 #include "QDebug"
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QCloseEvent>
+
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+
+#include <tyristmanual.h>
+#include "services/validator/mestootduxavalidator.h"
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),

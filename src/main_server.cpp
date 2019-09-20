@@ -1,15 +1,15 @@
 #include <QCoreApplication>
-
-#include "config/pipe_naming.h"
-#include <database.h>
-#include "stream/pipestream.h"
-#include <serverworker.h>
-#include <thread.h>
-
 #include <QDebug>
 #include <iostream>
 
 #include <map>
+
+#include "config/pipe_naming.h"
+#include <database.h>
+#include <serverworker.h>
+#include "services/stream/pipestream.h"
+#include "services/thread/thread.h"
+
 
 using namespace std;
 

@@ -1,10 +1,11 @@
 #ifndef DATABASECONTROLLER_H
 #define DATABASECONTROLLER_H
 
-#include <tyristmanual.h>
-#include <stream/pipestream.h>
 #include <QObject>
-#include <server_command.h>
+
+#include <tyristmanual.h>
+#include <services/stream/pipestream.h>
+#include <config/server_command.h>
 
 class DataBaseController : public QObject
 {

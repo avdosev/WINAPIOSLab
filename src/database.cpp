@@ -5,7 +5,7 @@
 #include <QDir>
 #include <QDebug>
 
-#include "stream/filestream.h"
+#include "services/stream/filestream.h"
 
 static const QString dirFileDataBase = "./database.db";
 static const uint periodAutoSave = 10000; // по моим расчетам около 10 секунд

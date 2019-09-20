@@ -1,13 +1,12 @@
 #include "databasecontroller.h"
 
-#include <server_command.h>
-
 #include <exception>
 
 #include <QDebug>
 #include <QThread>
 
-#include "config/config_pipe_naming.h"
+#include "config/server_command.h"
+#include "config/pipe_naming.h"
 
 Q_DECLARE_METATYPE(ClientCommand)
 

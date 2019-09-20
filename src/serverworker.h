@@ -1,10 +1,10 @@
 #pragma once
 
-#include <database.h>
+#include "database.h"
 
-#include <server_command.h>
+#include "config/server_command.h"
 
-#include "stream/pipestream.h"
+#include "services/stream/pipestream.h"
 
 #include <map>
 

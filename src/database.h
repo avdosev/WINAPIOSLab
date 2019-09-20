@@ -4,7 +4,7 @@
 #include <QMap>
 
 #include "databaseprototype.h"
-#include "timer.h"
+#include "services/thread/timer.h"
 
 class DataBase : public DataBasePrototype
 {

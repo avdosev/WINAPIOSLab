@@ -15,13 +15,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main_server.cpp \
+    main_server.cpp \
     database.cpp \
-    stream/datastream.cpp \
-    stream/filestream.cpp \
-    stream/pipestream.cpp \
-    thread.cpp \
-    timer.cpp \
+    services/stream/datastream.cpp \
+    services/stream/filestream.cpp \
+    services/stream/pipestream.cpp \
+    services/thread/thread.cpp \
+    services/thread/timer.cpp \
     tyristmanual.cpp \
     serverworker.cpp
 
@@ -32,13 +32,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     database.h \
-    stream/datastream.h \
-    stream/filestream.h \
-    stream/pipestream.h \
-    server_command.h \
-    thread.h \
-    timer.h \
+    services/stream/datastream.h \
+    services/stream/filestream.h \
+    services/stream/pipestream.h \
+    services/thread/thread.h \
+    services/thread/timer.h \
     tyristmanual.h \
     databaseprototype.h \
     config/pipe_naming.h \
+    config/server_command.h \
     serverworker.h
